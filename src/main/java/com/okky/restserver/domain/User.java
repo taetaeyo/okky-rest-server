@@ -21,16 +21,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
+	
+	@Column(name = "username", nullable = false)
+	private String username;
 
 	@Column(name = "password", nullable = false)
     private String password;
+	
 	
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     
     @Builder
-    public User(Long id, String password, String email) {
+    public User(Long id,  String username, String password,String email) {
     	this.id = id;
+    	this.username = username;
     	this.password = password;
         this.email = email;
     }

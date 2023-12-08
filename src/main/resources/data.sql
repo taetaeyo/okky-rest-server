@@ -1,1 +1,1 @@
-INSERT INTO users (id, password, email) VALUES ('1', 'password', 'test@naver.com')
+INSERT INTO users (id, password, username, email) VALUES ('1', 'password', '홍길동','test@naver.com')
