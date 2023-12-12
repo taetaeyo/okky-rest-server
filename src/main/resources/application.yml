@@ -11,7 +11,10 @@ spring:
   h2:
     console:
       enabled: true
-
+      
+jwt:
+  secret_key: OkkySecretKey
+  
 springdoc:
   swagger-ui:
     # swagger-ui 접근 경로. default 값은 /swagger-ui.html이다.
@@ -52,4 +55,4 @@ springdoc:
   
   # 해당 패턴에 매칭되는 controller만 swagger-ui에 노출한다.
   #paths-to-match:
-    #- /api/**
+  #- /api/**
