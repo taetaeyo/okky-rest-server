@@ -6,17 +6,13 @@ spring:
         format_sql: true
     defer-datasource-initialization: true
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-  h2:
-    console:
-      enabled: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://34.82.221.58:3306/okky?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: okky
+    password: 1234
 jwt:
   secret_key: OkkySecretKey
-  driver-class-name: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://34.82.221.58:3306/okky?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-  username: okky
-  password: 1234
+
 springdoc:
   swagger-ui:
     # swagger-ui 접근 경로. default 값은 /swagger-ui.html이다.
