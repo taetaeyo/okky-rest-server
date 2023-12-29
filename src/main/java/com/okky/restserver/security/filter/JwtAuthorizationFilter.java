@@ -10,12 +10,15 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.okky.restserver.security.SecurityConstants;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 
 /**
  * Spring Security 환경설정을 구성하는 단계에서 Filter로 등록한 클래스
@@ -26,7 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, @NonNull FilterChain chain)
 			throws ServletException, IOException {
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
         List<String> list = Arrays.asList(
@@ -48,7 +51,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
         }
 
         // [STEP1] Client에서 API를 요청할때 Header를 확인합니다.
-        String header = request.getHeader(AuthConstants.AUTH_HEADER);
+        String header = request.getHeader(SecurityConstants.AUTH_HEADER);
         logger.debug("[+] header Check: " + header);
 
         try {
