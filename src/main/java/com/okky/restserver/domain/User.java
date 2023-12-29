@@ -17,17 +17,19 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity
 public class User implements UserDetails{
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
-    private Long id;
+    private String id;
 	
 	@Column(name = "username", nullable = false)
 	private String username;
@@ -39,7 +41,7 @@ public class User implements UserDetails{
     private String email;
     
     @Builder
-    public User(Long id,  String username, String password,String email) {
+    public User(String id,  String username, String password,String email) {
     	this.id = id;
     	this.username = username;
     	this.password = password;
