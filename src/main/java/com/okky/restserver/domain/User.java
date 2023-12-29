@@ -55,7 +55,7 @@ public class User implements UserDetails{
     }
 
     // 사용자의 id를 반환
-    public Long getId() {
+    public String getId() {
         return id;
     }
     
