@@ -2,8 +2,6 @@ package com.okky.restserver.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,13 +12,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class TestController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
-	
 	private final UserService userService;
 	
 	@GetMapping("/test")
@@ -30,19 +28,19 @@ public class TestController {
 	public String test() {
 		String data = "okky project return test";
 		
-		LOGGER.info("Test Controller data :: " + data);
+		log.info("Test Controller data :: " + data);
 		
 		return data;
 	}
-	
 	
 	@GetMapping("/testuser")
 	@Operation(summary = "Get test user value", description = "유저 정보를 테스트한다.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "성공"),
 							@ApiResponse(responseCode = "404", description = "실패") })
 	public List<User> getUsers() {
-		LOGGER.info("TEST Users Controller data");
+		log.info("TEST Users Controller data");
 		
 		return userService.getUsersList();
 	}
+	
 }

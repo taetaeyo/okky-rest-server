@@ -19,6 +19,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Spring Security 환경설정을 구성하는 단계에서 Filter로 등록한 클래스
@@ -26,6 +27,7 @@ import lombok.NonNull;
  * 
  * @author taekwon
  */
+@Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
 	@Override
@@ -33,9 +35,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 			throws ServletException, IOException {
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
         List<String> list = Arrays.asList(
-                "/api/v1/user/login",
+                "/test/*",
                 "/api/v1/test/generateToken"
-//                "api/v1/code/codeList"
         );
 
         // 2. 토큰이 필요하지 않은 API URL의 경우 => 로직 처리 없이 다음 필터로 이동
@@ -52,7 +53,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
         // [STEP1] Client에서 API를 요청할때 Header를 확인합니다.
         String header = request.getHeader(SecurityConstants.AUTH_HEADER);
-        logger.debug("[+] header Check: " + header);
+        log.debug("[+] header Check: " + header);
 
         try {
             // [STEP2-1] Header 내에 토큰이 존재하는 경우
@@ -66,7 +67,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
                     // [STEP4] 토큰을 기반으로 사용자 아이디를 반환 받는 메서드
                     String userId = TokenUtils.getUserIdFromToken(token);
-                    logger.debug("[+] userId Check: " + userId);
+                    log.debug("[+] userId Check: " + userId);
 
                     // [STEP5] 사용자 아이디가 존재하는지 여부 체크
                     if (userId != null && !userId.equalsIgnoreCase("")) {
@@ -130,7 +131,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
         jsonMap.put("message", resultMsg);
         jsonMap.put("reason", e.getMessage());
         JSONObject jsonObject = new JSONObject(jsonMap);
-        logger.error(resultMsg, e);
+        log.error(resultMsg, e);
         return jsonObject;
     }
 }

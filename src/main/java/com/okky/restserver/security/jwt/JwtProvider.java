@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,14 +17,14 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
-public class JwtTokenProvider {
+public class JwtProvider {
 
 	private final JwtProperties jwtProperties;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 	
 	public String generateToken(User user, Duration expiredAt) {
 		Date now = new Date();
@@ -56,7 +54,7 @@ public class JwtTokenProvider {
 			
 			return true;
 		} catch (Exception e) {
-			LOGGER.error("{}", e);
+			log.error("{}", e);
 			return false;
 		}
 	}
