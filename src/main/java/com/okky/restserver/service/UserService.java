@@ -19,4 +19,8 @@ public class UserService {
     	return userRepository.findAll();
     }
 
+	public User findById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    }
 }
