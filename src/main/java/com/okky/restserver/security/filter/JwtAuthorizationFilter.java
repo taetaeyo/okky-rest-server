@@ -36,7 +36,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 			@NonNull FilterChain chain) throws ServletException, IOException {
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
 		List<String> list = Arrays.asList(
-				"/test/*", 
+				"/test", 
+				"/test/user", 
 				"/api/token"
 		);
 

@@ -19,20 +19,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "users")
+@Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @Entity
 public class User implements UserDetails{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private String id;
 	
-	@Column(name = "username", nullable = false)
-	private String username;
+	@Column(name = "user_name", nullable = false)
+	private String userName;
 
 	@Column(name = "password", nullable = false)
     private String password;
@@ -41,9 +43,9 @@ public class User implements UserDetails{
     private String email;
     
     @Builder
-    public User(String id,  String username, String password,String email) {
+    public User(String id,  String userName, String password,String email) {
     	this.id = id;
-    	this.username = username;
+    	this.userName = userName;
     	this.password = password;
         this.email = email;
     }
@@ -62,7 +64,7 @@ public class User implements UserDetails{
     // 사용자 이름 반환
     @Override
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     // 사용자의 패스워드 반환
