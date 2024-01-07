@@ -8,9 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.json.simple.JSONObject;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.okky.restserver.security.SecurityConstants;
+import com.okky.restserver.security.jwt.JwtProvider;
 import com.okky.restserver.security.jwt.TokenUtils;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,6 +23,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,66 +33,48 @@ import lombok.extern.slf4j.Slf4j;
  * @author taekwon
  */
 @Slf4j
+@RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter{
+	
+	private final JwtProvider jwtProvider;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-			@NonNull FilterChain chain) throws ServletException, IOException {
-		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
+			@NonNull FilterChain filterChain) throws ServletException, IOException {
+		// 토큰이 필요하지 않은 API URL에 대해서 배열로 구성
 		List<String> list = Arrays.asList(
 				"/test", 
 				"/test/user", 
 				"/api/token"
 		);
 
-		// 2. 토큰이 필요하지 않은 API URL의 경우 => 로직 처리 없이 다음 필터로 이동
+		// 토큰이 필요하지 않은 API URL의 경우 : 로직 처리 없이 다음 필터로 이동
 		if (list.contains(request.getRequestURI())) {
-			chain.doFilter(request, response);
+			filterChain.doFilter(request, response);
 			return;
 		}
 
-		// 3. OPTIONS 요청일 경우 => 로직 처리 없이 다음 필터로 이동
-		if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
-			chain.doFilter(request, response);
-			return;
-		}
+		// Header Check
+		String authorizationHeader = request.getHeader(SecurityConstants.HEADER_AUTHORIZATION);
+		log.debug("AuthorizationHeader Check {}" + authorizationHeader);
 
-		// [STEP1] Client에서 API를 요청할때 Header를 확인합니다.
-		String header = request.getHeader(SecurityConstants.AUTH_HEADER);
-		log.debug("{} header Check: " + header);
-
+		String token = getAccessToken(authorizationHeader);
+		log.debug("Access Token {}" + token);
+		
 		try {
-			// [STEP2-1] Header 내에 토큰이 존재하는 경우
-			if (header != null && !header.equalsIgnoreCase("")) {
-
-				// [STEP2] Header 내에 토큰을 추출합니다.
-				String token = TokenUtils.getTokenFromHeader(header);
-
-				// [STEP3] 추출한 토큰이 유효한지 여부를 체크합니다.
-				if (TokenUtils.isValidToken(token)) {
-
-					// [STEP4] 토큰을 기반으로 사용자 아이디를 반환 받는 메서드
-					String userId = TokenUtils.getUserIdFromToken(token);
-					log.debug("{} userId Check: " + userId);
-
-					// [STEP5] 사용자 아이디가 존재하는지 여부 체크
-					if (userId != null && !userId.equalsIgnoreCase("")) {
-
-						// TODO: [STEP6] 실제 DB로 조회를 하여 유효한 사용자 인지 확인(인증)하는 부분이 들어가면 될것 같습니다.
-						chain.doFilter(request, response);
-					} else {
-						log.error("TOKEN isn't userId");
-					}
-					
-				} else {	// 토큰이 유효하지 않은 경우
-					log.error("TOKEN is invalid");
-				}
-				
-			} else {	// [STEP2-1] 토큰이 존재하지 않는 경우
-				log.error("Token is null");
+			// 토큰 유효 check
+			if (jwtProvider.validToken(token)) {
+				// 인증 정보 설정
+				Authentication authentication = jwtProvider.getAuthentication(token);
+	            SecurityContextHolder.getContext().setAuthentication(authentication);
+			} else {	// 토큰 유효하지 않음
+				log.error("Token validation Fail");
 			}
+			
+			filterChain.doFilter(request, response);
+			
 		} catch (Exception e) {
-			// Token 내에 Exception이 발생 하였을 경우 => 클라이언트에 응답값을 반환하고 종료합니다.
+			// 토큰 Exception 발생 하였을 경우 : 클라이언트에 응답값을 반환하고 종료
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/json");
 			
@@ -137,5 +123,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
         
         log.error(resultMsg, e);
         return jsonObject;
+    }
+    
+    private String getAccessToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+            return authorizationHeader.substring(SecurityConstants.TOKEN_PREFIX.length());
+        }
+
+        return null;
     }
 }

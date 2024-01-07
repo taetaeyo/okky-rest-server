@@ -14,7 +14,8 @@ spring:
         ddl-auto: validate
       format_sql: true
 jwt:
-  secret_key: OkkySecretKey
+  issuer: okkyRestServer
+  secret_key: okkySecretKey
 
 springdoc:
   swagger-ui:

@@ -56,8 +56,9 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	log.info("[+] SecurityConfig Start");
+    	
     	http
-    		// 서버에 인증정보를 저장하지 않기에 csrf를 사용하지 않는다.
+    		// rest api이므로 csrf 보안 미사용
 	    	.csrf((csrf) -> csrf.disable()		
 			)
 	    	// 토큰을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용

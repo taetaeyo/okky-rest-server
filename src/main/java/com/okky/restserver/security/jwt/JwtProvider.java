@@ -37,10 +37,12 @@ public class JwtProvider {
 		
 		return Jwts.builder()
 				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-				.setIssuedAt(now)
-				.setExpiration(now)
+				.setIssuer(jwtProperties.getIssuer())
+				.setIssuedAt(now)				// 현재시간
+				.setExpiration(expiry)
 				.setSubject(user.getEmail())
 				.claim("id", user.getId())
+				// 서명 : 비밀값과 함께 해시값을 HS256으로 암호화
 				.signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
 				.compact();
 	}
@@ -53,7 +55,7 @@ public class JwtProvider {
 					.parseClaimsJws(token);
 			
 			return true;
-		} catch (Exception e) {
+		} catch (Exception e) {	// 복호화 과정에서 error 발생시 유효하지 않은 token
 			log.error("{}", e);
 			return false;
 		}

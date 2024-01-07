@@ -42,12 +42,16 @@ public class User implements UserDetails{
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     
+    @Column(name = "nickname", nullable = false, unique = true)
+    private String nickname;
+    
     @Builder
-    public User(String id,  String userName, String password,String email) {
+    public User(String id,  String userName, String password, String email, String nickname) {
     	this.id = id;
     	this.userName = userName;
     	this.password = password;
         this.email = email;
+        this.nickname = nickname;
     }
 
     // 권한 반환
