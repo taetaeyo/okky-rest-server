@@ -15,10 +15,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
-import com.deotis.wisevoiceweb.security.config.SecurityConstants;
 
 public class CryptoRSA {
 
@@ -77,13 +74,16 @@ public class CryptoRSA {
 		return decryptedValue;
 	}
 
+	/*
 	public static PrivateKey getPrivateKeyBySession(HttpSession session) {
 		if (session.getAttribute(SecurityConstants.SECURITY_SESSION_KEY) != null) {
 			return (PrivateKey) session.getAttribute(SecurityConstants.SECURITY_SESSION_KEY);
 		} else
 			return null;
 	}
+	*/
 	
+	/*
 	public static PrivateKey getPrivateKeyByRequestServlet(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		if (session != null && session.getAttribute(SecurityConstants.SECURITY_SESSION_KEY) != null) {
@@ -91,6 +91,7 @@ public class CryptoRSA {
 		} else
 			return null;
 	}
+	*/
 
 	/**
 	 * 16진 문자열을 byte 배열로 변환한다.
