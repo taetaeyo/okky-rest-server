@@ -57,7 +57,7 @@ public class SecurityConfig{
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	log.info("[+] SecurityConfig Start");
+    	log.info("SecurityConfig Start");
     	
     	http
     		// rest api이므로 csrf 보안 미사용
