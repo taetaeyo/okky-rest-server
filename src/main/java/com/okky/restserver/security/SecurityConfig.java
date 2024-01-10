@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.okky.restserver.security.filter.JwtAuthorizationFilter;
+import com.okky.restserver.security.jwt.JwtProvider;
 import com.okky.restserver.service.UserDetailService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableWebSecurity
 public class SecurityConfig{
 	
+	private final JwtProvider jwtProvider;
 	private final UserDetailsService userService;
 
 	/**
@@ -65,7 +67,7 @@ public class SecurityConfig{
 	        .authorizeHttpRequests((authz) -> authz.anyRequest().permitAll()
     		)
 	        // Spring Security JWT Filter Load
-	        .addFilterBefore(jwtAuthorizationFilter(), BasicAuthenticationFilter.class)
+	        .addFilterBefore(new JwtAuthorizationFilter(jwtProvider), BasicAuthenticationFilter.class)
 	        // Session 기반의 인증기반을 사용하지 않고 추후 JWT를 이용하여서 인증 예정
 	        .sessionManagement((management) -> management
 	        		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)	
@@ -90,16 +92,6 @@ public class SecurityConfig{
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-    
-    /**
-     * 9. JWT 토큰을 통하여서 사용자를 인증합니다.
-     *
-     * @return JwtAuthorizationFilter
-     */
-    @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter();
     }
     
 }
