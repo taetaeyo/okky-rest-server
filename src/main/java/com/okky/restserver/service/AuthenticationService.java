@@ -19,9 +19,9 @@ public class AuthenticationService {
 	private final UserRepository userRepository;
 
 	public String login(User user) {
-		String temp = jwtProvider.generateToken(user, Duration.ofMinutes(10));
+		String jwt = jwtProvider.generateToken(user, Duration.ofMinutes(10));
 //		return new UserResponseDto(user.getId(), jwtProvider.generateToken(user, Duration.ofMinutes(10)));
 		
-		return "servicetest";
+		return jwt;
 	}
 }

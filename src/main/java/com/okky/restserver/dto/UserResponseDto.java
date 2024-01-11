@@ -1,11 +1,11 @@
 package com.okky.restserver.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
+@AllArgsConstructor
 @Getter
 public class UserResponseDto {
-	private String id;
 	private String jwt;
 }
