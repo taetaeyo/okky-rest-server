@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.okky.restserver.domain.User;
 import com.okky.restserver.dto.CreateAccessTokenRequest;
 import com.okky.restserver.dto.CreateAccessTokenResponse;
-import com.okky.restserver.dto.UserResponseDto;
+import com.okky.restserver.dto.JwtDto;
+import com.okky.restserver.dto.SignInDto;
 import com.okky.restserver.service.AuthenticationService;
-import com.okky.restserver.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,21 +31,19 @@ public class AuthenticationController {
 	
 	private final AuthenticationService authenticationService;
 	
-	private final TokenService tokenService;
-
-	@PostMapping(value = "/login")
-	public ResponseEntity<UserResponseDto> login(@RequestBody User request) {
+	@PostMapping(value = "/sign-in")
+	public ResponseEntity<JwtDto> signIn(@RequestBody SignInDto signInDto) {
+		String jwt = authenticationService.signIn(signInDto);
 		
-		String jwt = authenticationService.login(request);
 		return ResponseEntity.status(HttpStatus.CREATED)
-								.body(new UserResponseDto(jwt));
+								.body(new JwtDto(jwt));
 	}
 	
-	@PostMapping("/refresh-token")
-    public ResponseEntity<CreateAccessTokenResponse> createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
-        String newAccessToken = tokenService.createNewAccessToken(request.getRefreshToken());
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new CreateAccessTokenResponse(newAccessToken));
-    }
+//	@PostMapping("/refresh-token")
+//    public ResponseEntity<CreateAccessTokenResponse> createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
+//        String newAccessToken = authenticationService.createNewAccessToken(request.getRefreshToken());
+//
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                				.body(new CreateAccessTokenResponse(newAccessToken));
+//    }
 }

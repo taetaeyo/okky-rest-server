@@ -14,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.okky.restserver.security.SecurityConstants;
 import com.okky.restserver.security.jwt.JwtProvider;
-import com.okky.restserver.security.jwt.TokenUtils;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -44,9 +43,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 		// 토큰이 필요하지 않은 API URL에 대해서 배열로 구성
 		List<String> list = Arrays.asList(
 				"/test", 
-				"/test/user", 
-				"/api/token",
-				"/auth/login"
+//				"/test/user", 
+				"/auth/sign-in"
 		);
 
 		// 토큰이 필요하지 않은 API URL의 경우 : 로직 처리 없이 다음 필터로 이동
@@ -57,10 +55,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
 		// Header Check
 		String authorizationHeader = request.getHeader(SecurityConstants.HEADER_AUTHORIZATION);
-		log.debug("AuthorizationHeader Check {}" + authorizationHeader);
+		log.info("AuthorizationHeader Check {}" + authorizationHeader);
 
 		String token = getAccessToken(authorizationHeader);
-		log.debug("Access Token {}" + token);
+		log.info("Access Token {}" + token);
 		
 		try {
 			// 토큰 유효 check
@@ -97,20 +95,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
     private JSONObject jsonResponseWrapper(Exception e) {
 
         String resultMsg = "";
-        // JWT 토큰 만료
-        if (e instanceof ExpiredJwtException) {
+       
+        if (e instanceof ExpiredJwtException) {				 	// JWT 토큰 만료
             resultMsg = "TOKEN Expired";
-        }
-        // JWT 허용된 토큰이 아님
-        else if (e instanceof SignatureException) {
+        } else if (e instanceof SignatureException) {			// JWT 허용된 토큰이 아님
             resultMsg = "TOKEN SignatureException Login";
-        }
-        // JWT 토큰내에서 오류 발생 시
-        else if (e instanceof JwtException) {
-            resultMsg = "TOKEN Parsing JwtException";
-        }
-        // 이외 JTW 토큰내에서 오류 발생
-        else {
+        } else if (e instanceof JwtException) {
+            resultMsg = "TOKEN Parsing JwtException";			// JWT 토큰내에서 오류 발생 시
+        } else {												// 이외 JTW 토큰내에서 오류 발생
             resultMsg = "OTHER TOKEN ERROR";
         }
 
