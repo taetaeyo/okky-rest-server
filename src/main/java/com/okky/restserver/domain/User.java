@@ -30,7 +30,7 @@ public class User implements UserDetails{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
+    @Column(name = "id", nullable = false, unique = true)
     private String id;
 	
 	@Column(name = "user_name", nullable = false)
@@ -68,7 +68,8 @@ public class User implements UserDetails{
     // 사용자 이름 반환
     @Override
     public String getUsername() {
-        return userName;
+//        return userName;
+        return id;
     }
 
     // 사용자의 패스워드 반환
