@@ -8,5 +8,5 @@ import com.okky.restserver.domain.User;
 
 public interface UserRepository extends JpaRepository<User, String>{
 	Optional<User> findById(String id);
-	Optional<User> findByUserName(String userName);
+	Optional<User> findByUserName(String id);
 }

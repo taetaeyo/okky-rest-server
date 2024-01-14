@@ -33,7 +33,7 @@ public class User implements UserDetails{
     @Column(name = "id", nullable = false, unique = true)
     private String id;
 	
-	@Column(name = "user_name", nullable = false)
+	@Column(name = "name", nullable = false)
 	private String userName;
 
 	@Column(name = "password", nullable = false)
@@ -68,7 +68,7 @@ public class User implements UserDetails{
     // 사용자 이름 반환
     @Override
     public String getUsername() {
-//        return userName;
+//        return name;
         return id;
     }
 
