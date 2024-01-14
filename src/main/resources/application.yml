@@ -12,12 +12,16 @@ spring:
     properties:
       hibernate:
         ddl-auto: validate
-      format_sql: true
+        format_sql: true
 jwt:
   issuer: okkyRestServer
   # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
   secret_key: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
-
+# SQL parameter console show
+logging:
+  pattern:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
 springdoc:
   swagger-ui:
     # swagger-ui 접근 경로. default 값은 /swagger-ui.html이다.
