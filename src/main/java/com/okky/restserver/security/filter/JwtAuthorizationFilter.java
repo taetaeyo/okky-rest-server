@@ -10,6 +10,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.okky.restserver.security.SecurityConstants;
@@ -43,7 +44,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 		// 토큰이 필요하지 않은 API URL에 대해서 배열로 구성
 		List<String> list = Arrays.asList(
 				"/test", 
-//				"/test/user", 
 				"/auth/sign-in"
 		);
 
@@ -62,7 +62,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 		
 		try {
 			// 토큰 유효 check
-			if (jwtProvider.validToken(token)) {
+			if (StringUtils.hasText(token) && jwtProvider.validToken(token)) {
 				// 인증 정보 설정
 				Authentication authentication = jwtProvider.getAuthentication(token);
 	            SecurityContextHolder.getContext().setAuthentication(authentication);

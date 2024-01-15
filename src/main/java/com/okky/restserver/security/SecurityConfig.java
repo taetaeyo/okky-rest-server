@@ -1,24 +1,21 @@
 package com.okky.restserver.security;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 
-import com.okky.restserver.security.filter.JwtAuthorizationFilter;
+import com.okky.restserver.security.jwt.JwtAccessDeniedHandler;
+import com.okky.restserver.security.jwt.JwtAuthenticationEntryPoint;
 import com.okky.restserver.security.jwt.JwtProvider;
-import com.okky.restserver.service.UserDetailService;
+import com.okky.restserver.security.jwt.JwtSecurityConfig;
+import com.okky.restserver.service.UserService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,25 +25,26 @@ import lombok.extern.slf4j.Slf4j;
  * @author taekwon
  */
 @Slf4j
-@RequiredArgsConstructor
-@Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+@Configuration
+public class SecurityConfig {
 	
 	private final JwtProvider jwtProvider;
-	private final UserDetailsService userService;
+	private final UserService userService;
+	private final CorsFilter corsFilter;
+	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	/**
-     * 인증된 사용자가 static 자원의 접근에 대해 ‘인가’에 대한 설정을 담당하는 메서드
-     * 
-     * @return WebSecurityCustomizer
-     */
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        // static 자원에 대해서 Security를 적용하지 않음으로 설정
-        return web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
-    
+	
+	public SecurityConfig(JwtProvider jwtProvider, CorsFilter corsFilter, UserService userService,
+			JwtAccessDeniedHandler jwtAccessDeniedHandler, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+		this.jwtProvider = jwtProvider;
+		this.userService = userService;
+		this.corsFilter = corsFilter;
+		this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+	}
+
     /**
      * HTTP에 대해서 ‘인증’과 ‘인가’를 담당하는 메서드
      * 필터를 통해 인증 방식과 인증 절차에 대해서 등록하며 설정을 담당하는 메서드
@@ -57,17 +55,23 @@ public class SecurityConfig{
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	log.info("SecurityConfig Start");
     	
     	http
-    		// rest api이므로 csrf 보안 미사용
+    		// token을 사용하는 방식이기 때문에 csrf를 disable
 	    	.csrf((csrf) -> csrf.disable()		
 			)
-	    	// 토큰을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
-	        .authorizeHttpRequests((authz) -> authz.anyRequest().permitAll()
-    		)
-	        // Spring Security JWT Filter Load
-	        .addFilterBefore(new JwtAuthorizationFilter(jwtProvider), BasicAuthenticationFilter.class)
+	    	 // Spring Security JWT Filter Load
+	        .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+	        .exceptionHandling(exceptionHandling -> exceptionHandling
+	                .accessDeniedHandler(jwtAccessDeniedHandler)
+	                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            )
+	    	// token을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
+	    	.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+	                .requestMatchers("/test",
+	                				"/auth/sign-in").permitAll()
+	                .anyRequest().authenticated()
+            )
 	        // Session 기반의 인증기반을 사용하지 않고 추후 JWT를 이용하여서 인증 예정
 	        .sessionManagement((management) -> management
 	        		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)	
@@ -75,18 +79,10 @@ public class SecurityConfig{
 	        // form 기반의 로그인에 대해 비 활성화하며 커스텀으로 구성한 필터를 사용한다.
 	        .formLogin((login) -> login	
     				.disable()
-    		);
+    		)
+	        .with(new JwtSecurityConfig(jwtProvider), customizer -> {});
 
     	return http.build();
-    }
-
-	@Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailService userDetailService) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userService)
-                .passwordEncoder(bCryptPasswordEncoder)
-                .and()
-                .build();
     }
 
     @Bean

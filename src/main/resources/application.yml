@@ -6,7 +6,6 @@ spring:
         jdbc-url: jdbc:mysql://34.82.221.58:3306/okky?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
         username: okky
         password: 1234
-        auto-commit: true
   jpa:
     show-sql: true
     properties:
@@ -19,7 +18,6 @@ jwt:
   secret_key: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
 # SQL parameter console show
 logging:
-  pattern:
   level:
     org.hibernate.orm.jdbc.bind: trace
 springdoc:

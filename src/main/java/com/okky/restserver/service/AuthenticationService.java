@@ -18,11 +18,11 @@ public class AuthenticationService {
 	private final RefreshTokenService refreshTokenService;
     private final UserService userService;
     
-	public String signIn(SignInDto signInDto) {
-		String jwt = jwtProvider.generateToken(signInDto, Duration.ofMinutes(30));
-		
-		return jwt;
-	}
+//	public String signIn(SignInDto signInDto) {
+//		String jwt = jwtProvider.generateToken(signInDto, Duration.ofMinutes(30));
+//		
+//		return jwt;
+//	}
 	
 //	public String createNewAccessToken(String refreshToken) {
 //        // 토큰 유효성 검사에 실패하면 예외 발생
