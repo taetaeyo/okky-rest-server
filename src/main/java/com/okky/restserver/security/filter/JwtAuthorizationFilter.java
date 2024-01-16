@@ -41,18 +41,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			@NonNull FilterChain filterChain) throws ServletException, IOException {
-		// 토큰이 필요하지 않은 API URL에 대해서 배열로 구성
-		List<String> list = Arrays.asList(
-				"/test", 
-				"/auth/sign-in"
-		);
-
-		// 토큰이 필요하지 않은 API URL의 경우 : 로직 처리 없이 다음 필터로 이동
-		if (list.contains(request.getRequestURI())) {
-			filterChain.doFilter(request, response);
-			return;
-		}
-
+		
 		// Header Check
 		String authorizationHeader = request.getHeader(SecurityConstants.HEADER_AUTHORIZATION);
 		log.info("AuthorizationHeader Check {}" + authorizationHeader);

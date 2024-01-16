@@ -22,7 +22,7 @@ logging:
     org.hibernate.orm.jdbc.bind: trace
 springdoc:
   swagger-ui:
-    # swagger-ui 접근 경로. default 값은 /swagger-ui.html이다.
+    # swagger-ui 접근 경로. default 값은 /swagger-ui/index.html
     #path: /swagger-custom-ui.html
    
     # 각 API의 그룹 표시 순서

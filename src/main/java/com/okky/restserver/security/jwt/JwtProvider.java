@@ -34,9 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtProvider implements InitializingBean {
 
 	private final JwtProperties jwtProperties;
-
-//	private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
 	private Key key;
 
 	@Override
@@ -52,11 +49,6 @@ public class JwtProvider implements InitializingBean {
 	}
 
 	private String createToken(Date validity, Authentication authentication) {
-//		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-//				signInDto.getId(), signInDto.getPassword());
-
-//		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-//		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		String authorities = authentication.getAuthorities().stream()
 											.map(GrantedAuthority::getAuthority)

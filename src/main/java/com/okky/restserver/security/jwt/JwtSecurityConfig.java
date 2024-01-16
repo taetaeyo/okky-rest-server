@@ -8,7 +8,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.okky.restserver.security.filter.JwtAuthorizationFilter;
 
 public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-    private final JwtProvider jwtProvider;
+    
+	private final JwtProvider jwtProvider;
+    
     public JwtSecurityConfig(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
     }

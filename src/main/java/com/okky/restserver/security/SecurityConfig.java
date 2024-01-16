@@ -2,6 +2,7 @@ package com.okky.restserver.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +17,7 @@ import com.okky.restserver.security.jwt.JwtProvider;
 import com.okky.restserver.security.jwt.JwtSecurityConfig;
 import com.okky.restserver.service.UserService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,23 +29,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 	
 	private final JwtProvider jwtProvider;
-	private final UserService userService;
 	private final CorsFilter corsFilter;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-	
-	public SecurityConfig(JwtProvider jwtProvider, CorsFilter corsFilter, UserService userService,
-			JwtAccessDeniedHandler jwtAccessDeniedHandler, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
-		this.jwtProvider = jwtProvider;
-		this.userService = userService;
-		this.corsFilter = corsFilter;
-		this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-	}
 
     /**
      * HTTP에 대해서 ‘인증’과 ‘인가’를 담당하는 메서드
@@ -69,7 +61,11 @@ public class SecurityConfig {
 	    	// token을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
 	    	.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
 	                .requestMatchers("/test",
-	                				"/auth/sign-in").permitAll()
+	                				"/auth/sign-in",
+	                				"/swagger/**",
+	                				"/swagger-ui/**",
+	                				"/swagger-resources/**",
+	                				"/v3/api-docs/**").permitAll()
 	                .anyRequest().authenticated()
             )
 	        // Session 기반의 인증기반을 사용하지 않고 추후 JWT를 이용하여서 인증 예정
