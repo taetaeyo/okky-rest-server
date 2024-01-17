@@ -24,15 +24,16 @@ public class AuthenticationService {
 //		return jwt;
 //	}
 	
-//	public String createNewAccessToken(String refreshToken) {
-//        // 토큰 유효성 검사에 실패하면 예외 발생
-//        if(!jwtProvider.validToken(refreshToken)) {
-//            throw new IllegalArgumentException("Unexpected token");
-//        }
-//
-//        String userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
-//        User user = userService.findById(userId);
-//
+	public String createNewAccessToken(String refreshToken) {
+        // 토큰 유효성 검사에 실패하면 예외 발생
+        if(!jwtProvider.validationToken(refreshToken)) {
+            throw new IllegalArgumentException("Unexpected token");
+        }
+
+        String userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
+        User user = userService.findById(userId);
+
 //        return jwtProvider.generateToken(user, Duration.ofHours(2));
-//    }
+        return "Undeveloped";
+    }
 }

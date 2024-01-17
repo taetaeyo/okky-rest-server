@@ -19,6 +19,7 @@ import com.okky.restserver.security.SecurityConstants;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -55,34 +56,28 @@ public class JwtProvider implements InitializingBean {
 											.collect(Collectors.joining(","));
 
 		return Jwts.builder()
-		         .setSubject(authentication.getName())
-		         .claim(SecurityConstants.AUTHORITIES_KEY, authorities)
-		         .signWith(key, SignatureAlgorithm.HS512)
-		         .setExpiration(validity)
-		         .compact();
-		
-//		return Jwts.builder()
-//				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-//				.setIssuer(jwtProperties.getIssuer())
-//				.setExpiration(validity).setSubject(signInDto.getId()).claim("id", authorities)
-//				// 서명 : 비밀값과 함께 해시값을 HS256으로 암호화
-//				.signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey()).compact();
+					.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+					.setSubject(authentication.getName())
+					.claim(SecurityConstants.AUTHORITIES_KEY, authorities)
+					.signWith(key, SignatureAlgorithm.HS512)
+					.setExpiration(validity)
+					.compact();
 	}
 
 	// JWT token 유효성 검증 메서드
-	public boolean validToken(String token) {
+	public boolean validationToken(String token) {
 		try {
-			Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(token);
-
+			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			
 			return true;
 		} catch (SecurityException | MalformedJwtException e) {
-			log.info("Invalid JWT Token", e);
+			log.info("잘못된 JWT 서명입니다. {}", e);
 		} catch (ExpiredJwtException e) {
-			log.info("Expired JWT Token", e);
+			log.info("만료된 JWT 토큰입니다. {}", e);
 		} catch (UnsupportedJwtException e) {
-			log.info("Unsupported JWT Token", e);
+			log.info("지원되지 않는 JWT 토큰입니다. {}", e);
 		} catch (IllegalArgumentException e) {
-			log.info("JWT claims string is empty.", e);
+			log.info("JWT 토큰이 잘못되었습니다. {}", e);
 		}
 
 		return false;
@@ -92,9 +87,10 @@ public class JwtProvider implements InitializingBean {
 	public Authentication getAuthentication(String token) {
 		Claims claims = getClaims(token);
 
-		Collection<? extends GrantedAuthority> authorities = Arrays
-				.stream(claims.get(SecurityConstants.AUTHORITIES_KEY).toString().split(","))
-				.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+		Collection<? extends GrantedAuthority> authorities = 
+				Arrays.stream(claims.get(SecurityConstants.AUTHORITIES_KEY).toString().split(","))
+						.map(SimpleGrantedAuthority::new)
+						.collect(Collectors.toList());
 
 		User principal = new User(claims.getSubject(), "", authorities);
 
@@ -109,7 +105,12 @@ public class JwtProvider implements InitializingBean {
 
 	// token 기반으로 클레임 조회
 	private Claims getClaims(String token) {
-		return Jwts.parser().setSigningKey(jwtProperties.getSecretKey()).parseClaimsJws(token).getBody();
+		return Jwts
+	              .parserBuilder()
+	              .setSigningKey(key)
+	              .build()
+	              .parseClaimsJws(token)
+	              .getBody();
 	}
 
 }

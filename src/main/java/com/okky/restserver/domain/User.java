@@ -68,8 +68,8 @@ public class User implements UserDetails{
     // 사용자 이름 반환
     @Override
     public String getUsername() {
-//        return name;
-        return id;
+        return userName;
+//        return id;
     }
 
     // 사용자의 패스워드 반환

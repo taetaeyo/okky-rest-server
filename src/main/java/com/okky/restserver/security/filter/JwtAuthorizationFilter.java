@@ -49,63 +49,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 		String token = getAccessToken(authorizationHeader);
 		log.info("Access Token {}" + token);
 		
-		try {
-			// 토큰 유효 check
-			if (StringUtils.hasText(token) && jwtProvider.validToken(token)) {
-				// 인증 정보 설정
-				Authentication authentication = jwtProvider.getAuthentication(token);
-	            SecurityContextHolder.getContext().setAuthentication(authentication);
-			} else {	// 토큰 유효하지 않음
-				log.error("Token validation Fail");
-			}
-			
-			filterChain.doFilter(request, response);
-			
-		} catch (Exception e) {
-			// 토큰 Exception 발생 하였을 경우 : 클라이언트에 응답값을 반환하고 종료
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application/json");
-			
-			PrintWriter printWriter = response.getWriter();
-			JSONObject jsonObject = jsonResponseWrapper(e);
-			
-			printWriter.print(jsonObject);
-			printWriter.flush();
-			printWriter.close();
+		// 토큰 유효 check
+		if (StringUtils.hasText(token) && jwtProvider.validationToken(token)) {
+			// 인증 정보 설정
+			Authentication authentication = jwtProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+		} else {	// 토큰 유효하지 않음
+			log.error("Token validation Fail");
 		}
+		
+		filterChain.doFilter(request, response);
 	}
-
-	/**
-     * 토큰 관련 Exception 발생 시 예외 응답값 구성
-     *
-     * @param e Exception
-     * @return JSONObject
-     */
-    private JSONObject jsonResponseWrapper(Exception e) {
-
-        String resultMsg = "";
-       
-        if (e instanceof ExpiredJwtException) {				 	// JWT 토큰 만료
-            resultMsg = "TOKEN Expired";
-        } else if (e instanceof SignatureException) {			// JWT 허용된 토큰이 아님
-            resultMsg = "TOKEN SignatureException Login";
-        } else if (e instanceof JwtException) {
-            resultMsg = "TOKEN Parsing JwtException";			// JWT 토큰내에서 오류 발생 시
-        } else {												// 이외 JTW 토큰내에서 오류 발생
-            resultMsg = "OTHER TOKEN ERROR";
-        }
-
-        HashMap<String, Object> jsonMap = new HashMap<>();
-        jsonMap.put("status", 401);
-        jsonMap.put("code", "9999");
-        jsonMap.put("message", resultMsg);
-        jsonMap.put("reason", e.getMessage());
-        
-        JSONObject jsonObject = new JSONObject(jsonMap);
-        
-        log.error(resultMsg, e);
-        return jsonObject;
-    }
     
     private String getAccessToken(String authorizationHeader) {
         if (authorizationHeader != null && authorizationHeader.startsWith(SecurityConstants.TOKEN_PREFIX)) {

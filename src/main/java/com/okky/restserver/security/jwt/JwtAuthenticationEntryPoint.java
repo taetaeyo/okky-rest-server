@@ -40,6 +40,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         	log.error("AcessToken Error : FAIL_AUTHORIZATION");
             setJsonResponse(response, AuthenticationErrorCode.FAIL_AUTHORIZATION);
         }
+        // 400 error
+        else if(authorization.equals(AuthenticationErrorCode.INVALID_INPUT_VALUE)) {
+        	log.error("AcessToken Error : INVALID_INPUT_VALUE");
+            setJsonResponse(response, AuthenticationErrorCode.INVALID_INPUT_VALUE);
+        }
         else {
         	log.error("AcessToken Error : INTERNAL_SERVER_ERROR");
             setJsonResponse(response, AuthenticationErrorCode.INTERNAL_SERVER_ERROR);
@@ -52,6 +57,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         JSONObject responsObject = new JSONObject();
+        
         responsObject.put("message", code.getMessage());
         responsObject.put("code", code.getHttpStatus().value());
 
