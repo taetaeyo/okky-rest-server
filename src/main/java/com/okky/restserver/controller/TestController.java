@@ -33,7 +33,7 @@ public class TestController {
 		return data;
 	}
 	
-	@GetMapping("/testuser")
+	@GetMapping("/test/user")
 	@Operation(summary = "Get test user value", description = "유저 정보를 테스트한다.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "성공"),
 							@ApiResponse(responseCode = "404", description = "실패") })

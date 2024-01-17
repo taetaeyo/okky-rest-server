@@ -1,21 +1,28 @@
 spring:
+  datasource:
+    hikari:
+      primary:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://34.82.221.58:3306/okky?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+        username: okky
+        password: 1234
   jpa:
     show-sql: true
     properties:
       hibernate:
+        ddl-auto: validate
         format_sql: true
-    defer-datasource-initialization: true
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://34.82.221.58:3306/okky?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: okky
-    password: 1234
 jwt:
-  secret_key: OkkySecretKey
-
+  issuer: okkyRestServer
+  # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
+  secret_key: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+# SQL parameter console show
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
 springdoc:
   swagger-ui:
-    # swagger-ui 접근 경로. default 값은 /swagger-ui.html이다.
+    # swagger-ui 접근 경로. default 값은 /swagger-ui/index.html
     #path: /swagger-custom-ui.html
    
     # 각 API의 그룹 표시 순서
