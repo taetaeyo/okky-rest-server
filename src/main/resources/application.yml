@@ -20,6 +20,8 @@ jwt:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
+api:
+  key: c310b74e-5c16-4895-a77e-03a600e57b41
 springdoc:
   swagger-ui:
     # swagger-ui 접근 경로. default 값은 /swagger-ui/index.html

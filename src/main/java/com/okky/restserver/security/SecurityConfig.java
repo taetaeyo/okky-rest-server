@@ -2,7 +2,6 @@ package com.okky.restserver.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -11,11 +10,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
+import com.okky.restserver.security.filter.ApiKeyFilter;
+import com.okky.restserver.security.filter.JwtAuthorizationFilter;
 import com.okky.restserver.security.jwt.JwtAccessDeniedHandler;
 import com.okky.restserver.security.jwt.JwtAuthenticationEntryPoint;
 import com.okky.restserver.security.jwt.JwtProvider;
 import com.okky.restserver.security.jwt.JwtSecurityConfig;
-import com.okky.restserver.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +36,7 @@ public class SecurityConfig {
 	private final CorsFilter corsFilter;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	private final ApiKeyFilter apiKeyFilter;
 
     /**
      * HTTP에 대해서 ‘인증’과 ‘인가’를 담당하는 메서드
@@ -53,7 +54,9 @@ public class SecurityConfig {
 	    	.csrf((csrf) -> csrf.disable()		
 			)
 	    	 // Spring Security JWT Filter Load
-	        .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+	    	.addFilter(corsFilter)
+	    	.addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
+	        .addFilterBefore(new JwtAuthorizationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
 	        .exceptionHandling(exceptionHandling -> exceptionHandling
 	                .accessDeniedHandler(jwtAccessDeniedHandler)
 	                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -61,7 +64,8 @@ public class SecurityConfig {
 	    	// token을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
 	    	.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
 	                .requestMatchers("/test",
-	                				"/auth/sign-in",
+	                				"/auth/**",
+	                				"/api/all/**",
 	                				"/swagger/**",
 	                				"/swagger-ui/**",
 	                				"/swagger-resources/**",

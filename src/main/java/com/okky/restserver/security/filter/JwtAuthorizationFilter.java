@@ -1,13 +1,7 @@
 package com.okky.restserver.security.filter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.SignatureException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
-import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -16,8 +10,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.okky.restserver.security.SecurityConstants;
 import com.okky.restserver.security.jwt.JwtProvider;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,10 +36,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 		
 		// Header Check
 		String authorizationHeader = request.getHeader(SecurityConstants.HEADER_AUTHORIZATION);
-		log.info("AuthorizationHeader Check {}" + authorizationHeader);
+		log.info("AuthorizationHeader Check {}", authorizationHeader);
 
 		String token = getAccessToken(authorizationHeader);
-		log.info("Access Token {}" + token);
+		log.info("Access Token {}", token);
 		
 		// 토큰 유효 check
 		if (StringUtils.hasText(token) && jwtProvider.validationToken(token)) {

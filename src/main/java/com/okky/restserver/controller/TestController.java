@@ -30,7 +30,7 @@ public class TestController {
 	public String test() {
 		String data = "okky project return test";
 		
-		log.info("Test Controller data :: " + data);
+		log.info("Test Controller data {} ", data);
 		
 		return data;
 	}
