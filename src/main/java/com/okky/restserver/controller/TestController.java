@@ -11,6 +11,7 @@ import com.okky.restserver.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,10 +22,11 @@ public class TestController {
 
 	private final UserService userService;
 	
-	@GetMapping("/test")
-	@Operation(summary = "Get test string value", description = "서버 접근 테스트를 위해 String을 반환한다.")
+	@Tag(name = "Test", description = "테스트")
+	@Operation(summary = "Get test string value", description = "서버 접근 테스트를 위해 String을 반환한다. JWT 불필요")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "성공"),
-							@ApiResponse(responseCode = "404", description = "실패") })
+			@ApiResponse(responseCode = "404", description = "실패") })
+	@GetMapping("/test")
 	public String test() {
 		String data = "okky project return test";
 		
@@ -32,11 +34,12 @@ public class TestController {
 		
 		return data;
 	}
-	
-	@GetMapping("/test/user")
-	@Operation(summary = "Get test user value", description = "유저 정보를 테스트한다.")
+
+	@Tag(name = "Test", description = "테스트")
+	@Operation(summary = "Get test user value", description = "유저 정보를 테스트한다. JWT 필요")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "성공"),
-							@ApiResponse(responseCode = "404", description = "실패") })
+			@ApiResponse(responseCode = "404", description = "실패") })
+	@GetMapping("/test/user")
 	public List<User> getUsers() {
 		log.info("TEST Users Controller data");
 		
