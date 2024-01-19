@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -29,7 +27,9 @@ public class User implements UserDetails{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "uuid", nullable = false, unique = true)
+	private String uuid;
+	
     @Column(name = "id", nullable = false, unique = true)
     private String id;
 	
@@ -46,7 +46,8 @@ public class User implements UserDetails{
     private String nickname;
     
     @Builder
-    public User(String id,  String userName, String password, String email, String nickname) {
+    public User(String uuid, String id,  String userName, String password, String email, String nickname) {
+    	this.uuid = uuid;
     	this.id = id;
     	this.userName = userName;
     	this.password = password;
@@ -69,7 +70,6 @@ public class User implements UserDetails{
     @Override
     public String getUsername() {
         return userName;
-//        return id;
     }
 
     // 사용자의 패스워드 반환
