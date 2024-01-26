@@ -1,20 +1,26 @@
 package com.okky.restserver.service;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.okky.restserver.domain.User;
-import com.okky.restserver.dto.AddUserRequestDto;
+import com.okky.restserver.dto.UserRequestDto;
+import com.okky.restserver.dto.UserResponseDto;
 import com.okky.restserver.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	// 사용자 전체 list 조회
 	public List<User> getUsersList(){
@@ -28,14 +34,20 @@ public class UserService {
     }
 	
 	// 사용자 추가 (회원 가입) 
-	public String save(AddUserRequestDto userDto) {
+	public UserResponseDto signUp(UserRequestDto userRequestDto) {
+		// UUID version 4
+		String uuid = UUID.randomUUID().toString();
+		log.info("Create UUID : {}", uuid);
+		log.info("Create UserId : {}", userRequestDto.getId());
 		
-		return userRepository.save(User.builder()
-					.uuid(null)
-					.id(null)
-					.password(null)
-					.userName(null)
-					.nickname(null)
-					.build()).getUuid();
+		User user = User.builder()
+						.uuid(uuid)
+						.id(userRequestDto.getId())
+						.password(bCryptPasswordEncoder.encode(userRequestDto.getPassword()))
+						.userName(userRequestDto.getUserName())
+						.nickName(userRequestDto.getNickName())
+						.build();
+		
+		return UserResponseDto.from(userRepository.save(user));
 	}
 }

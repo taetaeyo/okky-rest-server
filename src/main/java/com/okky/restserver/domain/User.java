@@ -27,7 +27,7 @@ public class User implements UserDetails{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "uuid", nullable = false, unique = true)
+	@Column(name = "uuid", nullable = false, unique = true, columnDefinition = "BINARY(16)")
 	private String uuid;
 	
     @Column(name = "id", nullable = false, unique = true)
@@ -43,16 +43,16 @@ public class User implements UserDetails{
     private String email;
     
     @Column(name = "nickname", nullable = false, unique = true)
-    private String nickname;
+    private String nickName;
     
     @Builder
-    public User(String uuid, String id,  String userName, String password, String email, String nickname) {
+    public User(String uuid, String id,  String userName, String password, String email, String nickName) {
     	this.uuid = uuid;
     	this.id = id;
     	this.userName = userName;
     	this.password = password;
         this.email = email;
-        this.nickname = nickname;
+        this.nickName = nickName;
     }
 
     // 권한 반환

@@ -20,7 +20,7 @@ import com.okky.restserver.dto.JwtDto;
 import com.okky.restserver.dto.SignInDto;
 import com.okky.restserver.security.SecurityConstants;
 import com.okky.restserver.security.jwt.JwtProvider;
-import com.okky.restserver.service.AuthenticationService;
+//import com.okky.restserver.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationController {
 	
 	private final JwtProvider jwtProvider;
-	private final AuthenticationService authenticationService;
+//	private final AuthenticationService authenticationService;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	
 	@Tag(name = "Authentication", description = "인증")
@@ -107,13 +107,13 @@ public class AuthenticationController {
 	}
 	
 	
-	@Tag(name = "Authentication", description = "인증")
-	@Operation(summary = "JWT 갱신 (Undeveloped)", description = "RefreshToken을 이용하여 JWT 재발급 (Undeveloped)")
-	@PostMapping("/refresh-token")
-    public ResponseEntity<CreateAccessTokenResponse> createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
-        String newAccessToken = authenticationService.createNewAccessToken(request.getRefreshToken());
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                				.body(new CreateAccessTokenResponse(newAccessToken));
-    }
+//	@Tag(name = "Authentication", description = "인증")
+//	@Operation(summary = "JWT 갱신 (Undeveloped)", description = "RefreshToken을 이용하여 JWT 재발급 (Undeveloped)")
+//	@PostMapping("/refresh-token")
+//    public ResponseEntity<CreateAccessTokenResponse> createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
+//        String newAccessToken = authenticationService.createNewAccessToken(request.getRefreshToken());
+//
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                				.body(new CreateAccessTokenResponse(newAccessToken));
+//    }
 }
