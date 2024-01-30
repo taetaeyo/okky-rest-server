@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 public class JwtDto {
 	private String code;		// status 코드
-	private String authType;	// Bearer
+	private String grantType;	// Bearer
 	private String jwt;
+	private String refreshToken;
 }
