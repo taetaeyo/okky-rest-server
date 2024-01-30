@@ -100,10 +100,11 @@ public class AuthenticationController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
-        String jwt = jwtProvider.generateToken(authentication, Duration.ofMinutes(10));
+        String jwt = jwtProvider.generateJwt(authentication, Duration.ofMinutes(10));
+        String refreshToken = jwtProvider.generateRefreshToken(authentication, Duration.ofHours(24));
 		
 		return ResponseEntity.status(HttpStatus.OK)
-								.body(new JwtDto(String.valueOf(HttpStatus.OK.value()), SecurityConstants.TOKEN_PREFIX, jwt));
+								.body(new JwtDto(String.valueOf(HttpStatus.OK.value()), SecurityConstants.TOKEN_PREFIX, jwt, refreshToken));
 	}
 	
 	

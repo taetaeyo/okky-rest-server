@@ -43,13 +43,20 @@ public class JwtProvider implements InitializingBean {
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
 
-	public String generateToken(Authentication authentication, Duration expired) {
+	public String generateJwt(Authentication authentication, Duration expired) {
 		Date now = new Date();
 
-		return createToken(new Date(now.getTime() + expired.toMillis()), authentication);
+		return createJwt(new Date(now.getTime() + expired.toMillis()), authentication);
+	}
+	
+	public String generateRefreshToken(Authentication authentication, Duration expired) {
+		Date now = new Date();
+
+		return createRefreshToken(new Date(now.getTime() + expired.toMillis()), authentication);
 	}
 
-	private String createToken(Date validity, Authentication authentication) {
+	// JWT 생성
+	private String createJwt(Date validity, Authentication authentication) {
 
 		String authorities = authentication.getAuthorities().stream()
 											.map(GrantedAuthority::getAuthority)
@@ -57,6 +64,21 @@ public class JwtProvider implements InitializingBean {
 
 		return Jwts.builder()
 					.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+					.setSubject(authentication.getName())
+					.claim(SecurityConstants.AUTHORITIES_KEY, authorities)
+					.signWith(key, SignatureAlgorithm.HS512)
+					.setExpiration(validity)
+					.compact();
+	}
+	
+	// Refresh Token 생성
+	private String createRefreshToken(Date validity, Authentication authentication) {
+
+		String authorities = authentication.getAuthorities().stream()
+											.map(GrantedAuthority::getAuthority)
+											.collect(Collectors.joining(","));
+
+		return Jwts.builder()
 					.setSubject(authentication.getName())
 					.claim(SecurityConstants.AUTHORITIES_KEY, authorities)
 					.signWith(key, SignatureAlgorithm.HS512)
