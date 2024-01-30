@@ -12,14 +12,14 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.okky.restserver.dto.ErrorDto;
-import com.okky.restserver.security.exception.DuplicateMemberException;
+import com.okky.restserver.security.exception.DuplicateUserException;
 import com.okky.restserver.security.exception.NotFoundMemberException;
 
 @ControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(CONFLICT)
-    @ExceptionHandler(value = { DuplicateMemberException.class })
+    @ExceptionHandler(value = { DuplicateUserException.class })
     @ResponseBody
     protected ErrorDto conflict(RuntimeException ex, WebRequest request) {
         return new ErrorDto(CONFLICT.value(), ex.getMessage());

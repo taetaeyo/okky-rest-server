@@ -1,5 +1,7 @@
 package com.okky.restserver.dto;
 
+import java.util.UUID;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserRequestDto {
 	
-//	@Schema(name = "UUID4")
-//	private String uuid;
+	@Schema(name = "UUID4")
+	private UUID uuid;
 	
 	@Schema(name = "사용자 ID")
 	private String id;
@@ -29,14 +31,5 @@ public class UserRequestDto {
 	
 	@Schema(name = "닉네임")
 	private String nickName;
-	
-//	@Builder
-//    public UserRequestDto(String id,  String userName, String password, String email, String nickName) {
-//    	this.id = id;
-//    	this.userName = userName;
-//    	this.password = password;
-//        this.email = email;
-//        this.nickName = nickName;
-//    }
 	
 }

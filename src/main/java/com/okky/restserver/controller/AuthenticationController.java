@@ -48,7 +48,7 @@ public class AuthenticationController {
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	
 	@Tag(name = "Authentication", description = "인증")
-	@Operation(summary = "사용자 로그인", description = "로그인을 시도하여 성공시 JWT 발급한다. JWT 만료 시간은 10분")
+	@Operation(summary = "회원 로그인", description = "로그인을 시도하여 성공시 JWT 발급한다. JWT 만료 시간은 10분")
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "200", description = "로그인 성공 : JWT 발급 성공", content = @Content(examples = {
 	          @ExampleObject(name = "getJwt",

@@ -1,5 +1,7 @@
 package com.okky.restserver.dto;
 
+import java.util.UUID;
+
 import com.okky.restserver.domain.User;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,13 +15,10 @@ import lombok.Setter;
 public class UserResponseDto {
 	
 	@Schema(name = "UUID4")
-	private String uuid;
+	private UUID uuid;
 	
 	@Schema(name = "사용자 ID")
 	private String id;
-	
-	@Schema(name = "사용자 비밀번호")
-	private String password;
 	
 	@Schema(name = "이메일")
 	private String email;
