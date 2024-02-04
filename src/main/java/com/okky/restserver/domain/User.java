@@ -13,7 +13,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,16 +32,21 @@ public class User implements UserDetails{
 	
 	private static final long serialVersionUID = 1L;
 
-	@Schema(description = "UUID")
+	@Schema(description = "PK", nullable = false)
 	@Id
-	@GeneratedValue(generator = "uuid4")
-    @GenericGenerator(name = "UUID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
+    private Long id;
+	
+	@Schema(description = "UUID")
+//	@GeneratedValue(generator = "uuid4")
+//    @GenericGenerator(name = "UUID")
     @Column(name = "uuid", columnDefinition = "BINARY(16)")
 	private UUID uuid;
 	
 	@Schema(description = "사용자 ID", nullable = false)
-    @Column(name = "id", nullable = false, unique = true)
-    private String id;
+	@Column(name = "user_id", nullable = false, unique = true)
+	private String userId;
 	
 	@Schema(description = "실명", nullable = false)
 	@Column(name = "name", nullable = false)
@@ -58,13 +65,25 @@ public class User implements UserDetails{
     private String nickName;
     
     @Builder
-    public User(UUID uuid, String id,  String userName, String password, String email, String nickName) {
-    	this.uuid = uuid;
+    public User(Long id, UUID uuid, String userId,String userName, String password, String email, String nickName) {
     	this.id = id;
+    	this.uuid = uuid;
+    	this.userId = userId;
     	this.userName = userName;
     	this.password = password;
         this.email = email;
         this.nickName = nickName;
+    }
+    
+    /*
+     * UUID는 기본키가 아니므로 ID 어노테이션으로 자동 생성할 수가 없으므로
+     * @PrePersist 어노테이션을 이용하여 uuid version4 생성
+     */
+    @PrePersist
+    private void beforePersist() {
+        if (uuid == null) {
+        	uuid = UUID.randomUUID();
+        }
     }
 
     // 권한 반환
@@ -74,8 +93,8 @@ public class User implements UserDetails{
     }
 
     // 사용자의 id를 반환
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
     
     // 사용자 이름 반환

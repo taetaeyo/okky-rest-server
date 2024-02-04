@@ -2,6 +2,7 @@ package com.okky.restserver.controller;
 
 import java.util.UUID;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,10 @@ import com.okky.restserver.dto.UserResponseDto;
 import com.okky.restserver.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +34,14 @@ public class UserController {
 	
 	@Tag(name = "USER", description = "회원")
 	@Operation(summary = "회원 가입", description = "회원 가입 진행")
+	@ApiResponses(value = { 
+			@ApiResponse(responseCode = "200", description = "회원 가입 성공", content = @Content(examples = {
+	          @ExampleObject(name = "insertUser",
+                      summary = "회원 가입 성공 예시",
+                      description = "회원 가입 성공 예시",
+                      value = "{\"uuid\":\"74ba9f95-4460-47e1-a7bb-ec6f8b4a84de\",\"userId\":\"test01\",\"email\":\"aaa@naver.com\",\"userName\":\"taetae\",\"nickName\":\"testNickName\"}")},
+								mediaType = MediaType.APPLICATION_JSON_VALUE)),
+	})
 	@PostMapping("/sign-up")
 	public ResponseEntity<UserResponseDto> signUp(@RequestBody 
 				@io.swagger.v3.oas.annotations.parameters.RequestBody UserRequestDto request) {

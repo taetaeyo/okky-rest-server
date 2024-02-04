@@ -18,7 +18,7 @@ public class UserResponseDto {
 	private UUID uuid;
 	
 	@Schema(description = "사용자 ID")
-	private String id;
+	private String userId;
 	
 	@Schema(description = "이메일")
 	private String email;
@@ -35,7 +35,7 @@ public class UserResponseDto {
     	
     	return UserResponseDto.builder()
     							.uuid(user.getUuid())
-    							.id(user.getId())
+    							.userId(user.getUserId())
     							.email(user.getEmail())
     							.userName(user.getUsername())
     							.nickName(user.getNickName())

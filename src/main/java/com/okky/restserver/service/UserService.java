@@ -33,7 +33,7 @@ public class UserService {
 	// 사용자 ID로 정보 조회
 	@Transactional(readOnly = true)
 	public User findById(String userId) {
-        return userRepository.findById(userId)
+        return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException(userId + " 사용자가 존재하지 않습니다."));
     }
 	
@@ -50,15 +50,15 @@ public class UserService {
 	@Transactional
 	public UserResponseDto signUp(UserRequestDto userRequestDto) {
 		
-		if (userRepository.findById(userRequestDto.getId()).orElse(null) != null) {
+		if (userRepository.findByUserId(userRequestDto.getUserId()).orElse(null) != null) {
 			log.info("		::		Duplicate ID	::");
 			throw new DuplicateUserException("이미 가입되어 있는 유저입니다.");
 		}
 		
-		log.info("Create UserId : {}", userRequestDto.getId());
+		log.info("Create UserId : {}", userRequestDto.getUserId());
 		
 		User user = User.builder()
-						.id(userRequestDto.getId())
+						.userId(userRequestDto.getUserId())
 						.password(bCryptPasswordEncoder.encode(userRequestDto.getPassword()))
 						.email(userRequestDto.getEmail())
 						.userName(userRequestDto.getUserName())

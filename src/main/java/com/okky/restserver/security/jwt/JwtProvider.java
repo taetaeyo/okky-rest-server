@@ -15,6 +15,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import com.okky.restserver.domain.RefreshToken;
+import com.okky.restserver.repository.RefreshTokenRepository;
 import com.okky.restserver.security.SecurityConstants;
 
 import io.jsonwebtoken.Claims;
@@ -34,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtProvider implements InitializingBean {
 
+	private final RefreshTokenRepository refreshTokenRepository;
 	private final JwtProperties jwtProperties;
 	private Key key;
 
@@ -51,8 +54,14 @@ public class JwtProvider implements InitializingBean {
 	
 	public String generateRefreshToken(Authentication authentication, Duration expired) {
 		Date now = new Date();
-
-		return createRefreshToken(new Date(now.getTime() + expired.toMillis()), authentication);
+		Long userId = Long.parseLong(authentication.getName());
+		String refreshToken = createRefreshToken(new Date(now.getTime() + expired.toMillis())
+													, authentication);
+		
+		RefreshToken refreshTokenDomain = new RefreshToken(userId, refreshToken);
+		refreshTokenRepository.save(refreshTokenDomain);
+		
+		return refreshToken;
 	}
 
 	// JWT 생성

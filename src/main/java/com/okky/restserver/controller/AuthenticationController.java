@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.okky.restserver.dto.CreateAccessTokenRequest;
-import com.okky.restserver.dto.CreateAccessTokenResponse;
 import com.okky.restserver.dto.JwtDto;
 import com.okky.restserver.dto.SignInDto;
 import com.okky.restserver.security.SecurityConstants;
@@ -102,7 +100,7 @@ public class AuthenticationController {
         
         String jwt = jwtProvider.generateJwt(authentication, Duration.ofMinutes(10));
         String refreshToken = jwtProvider.generateRefreshToken(authentication, Duration.ofHours(24));
-		
+        
 		return ResponseEntity.status(HttpStatus.OK)
 								.body(new JwtDto(String.valueOf(HttpStatus.OK.value()), SecurityConstants.TOKEN_PREFIX, jwt, refreshToken));
 	}

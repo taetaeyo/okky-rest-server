@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.okky.restserver.domain.User;
 
-public interface UserRepository extends JpaRepository<User, UUID>{
+public interface UserRepository extends JpaRepository<User, Long>{
 	Optional<User> findByUuid(UUID uuid);
-	Optional<User> findById(String id);
+	Optional<User> findByUserId(String userId);
 }

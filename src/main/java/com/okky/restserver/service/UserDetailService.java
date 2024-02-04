@@ -18,7 +18,7 @@ public class UserDetailService implements UserDetailsService{
 	// 사용자 이름으로 사용자의 정보를 가져오는 메서드
 	@Override
 	public UserDetails loadUserByUsername(final String id) {
-		return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException(id + " -> Not found in the database."));
+		return userRepository.findByUserId(id).orElseThrow(() -> new UsernameNotFoundException(id + " -> Not found in the database."));
 	}
 
 }
