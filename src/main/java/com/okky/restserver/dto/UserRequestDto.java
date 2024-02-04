@@ -14,22 +14,22 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserRequestDto {
 	
-	@Schema(name = "UUID4")
+	@Schema(description = "UUID4")
 	private UUID uuid;
 	
-	@Schema(name = "사용자 ID")
+	@Schema(description = "사용자 ID")
 	private String id;
 	
-	@Schema(name = "사용자 비밀번호")
+	@Schema(description = "사용자 비밀번호")
 	private String password;
 	
-	@Schema(name = "이메일")
+	@Schema(description = "이메일")
 	private String email;
 	
-	@Schema(name = "실명")
+	@Schema(description = "실명")
 	private String userName;
 	
-	@Schema(name = "닉네임")
+	@Schema(description = "닉네임")
 	private String nickName;
 	
 }

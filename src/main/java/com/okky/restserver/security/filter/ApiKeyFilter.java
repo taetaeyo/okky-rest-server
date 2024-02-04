@@ -1,6 +1,7 @@
 package com.okky.restserver.security.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,14 +38,22 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 		String xApiKey = request.getHeader(SecurityConstants.API_KEY_AUTH_HEADER_NAME);
 		log.info("Header x-api-key Check {}", xApiKey);
 		
-		if (StringUtils.hasText(xApiKey)) {
-			if (apiKey.equals(xApiKey)) {
-				log.info("Header x-api-key Check Success");
-				filterChain.doFilter(request, response);
-			}
+		// x-api-key 확인 예외 url
+		String[] urls = new String[] {"/swagger/", "/swagger-ui/", "/swagger-resources/", "/v3/api-docs"};
+		
+		if(Arrays.stream(urls).anyMatch(url -> request.getServletPath().contains(url))) {
+			log.info("Exclude swagger-related URLs from the ApiKeyFilter");
+			filterChain.doFilter(request, response);
 		} else {
-			setJsonResponse(response, AuthenticationErrorCode.X_API_KEY_ERROR);
-		    return;
+			if (StringUtils.hasText(xApiKey)) {
+				if (apiKey.equals(xApiKey)) {
+					log.info("Header x-api-key Check Success");
+					filterChain.doFilter(request, response);
+				}
+			} else {
+				setJsonResponse(response, AuthenticationErrorCode.X_API_KEY_ERROR);
+			    return;
+			}
 		}
 		
 	}

@@ -30,30 +30,30 @@ public class User implements UserDetails{
 	
 	private static final long serialVersionUID = 1L;
 
-	@Schema(name = "UUID")
+	@Schema(description = "UUID")
 	@Id
 	@GeneratedValue(generator = "uuid4")
     @GenericGenerator(name = "UUID")
     @Column(name = "uuid", columnDefinition = "BINARY(16)")
 	private UUID uuid;
 	
-	@Schema(name = "사용자 ID")
+	@Schema(description = "사용자 ID", nullable = false)
     @Column(name = "id", nullable = false, unique = true)
     private String id;
 	
-	@Schema(name = "실명")
+	@Schema(description = "실명", nullable = false)
 	@Column(name = "name", nullable = false)
 	private String userName;
 
-	@Schema(name = "사용자 비밀번호")
+	@Schema(description = "사용자 비밀번호", nullable = false)
 	@Column(name = "password", nullable = false)
     private String password;
 	
-	@Schema(name = "이메일")
+	@Schema(description = "이메일", nullable = false)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     
-    @Schema(name = "닉네임")
+    @Schema(description = "닉네임", nullable = false)
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickName;
     
