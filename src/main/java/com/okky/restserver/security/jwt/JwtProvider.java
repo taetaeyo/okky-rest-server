@@ -54,7 +54,9 @@ public class JwtProvider implements InitializingBean {
 	
 	public String generateRefreshToken(Authentication authentication, Duration expired) {
 		Date now = new Date();
-		Long userId = Long.parseLong(authentication.getName());
+		
+		com.okky.restserver.domain.User user = (com.okky.restserver.domain.User) authentication.getPrincipal();
+		Long userId = user.getId();
 		String refreshToken = createRefreshToken(new Date(now.getTime() + expired.toMillis())
 													, authentication);
 		

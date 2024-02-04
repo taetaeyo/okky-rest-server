@@ -52,7 +52,7 @@ public class AuthenticationController {
 	          @ExampleObject(name = "getJwt",
                       summary = "JWT 발급 성공 예시",
                       description = "JWT 만료 시간 10분",
-                      value = "{\"code\":200,\"authType\":\"Bearer \",\"jwt\":\"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MDEiLCJhdXRoIjoidXNlciIsImV4cCI6MTcwNTM4NzY4OX0.qkgb-IZXHCcqmb6xxgL2IP2GLHjjazyDofk3ReOoBQGIutHshkSZ3U3NEaNrRZvJ6QBXQf-WlysZ3YhD5r2y0A\"}")},
+                      value = "{\"code\":\"200\",\"grantType\":\"Bearer \",\"jwt\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWV0YWUiLCJhdXRoIjoidXNlciIsImV4cCI6MTcwNzA1ODAxMH0.3Q1to0uaR6qk4Vpm_zPryY9ihjOt9VNlb7OeZp6CSFmJhc7n2Vam2AwEZpAHL4mx1vW9Y76DMHbC6t7tV1uvKw\",\"refreshToken\":\"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWV0YWUiLCJhdXRoIjoidXNlciIsImV4cCI6MTcwNzE0MzgxNX0.l-WuRttrOJOmsMAG36yXvm4ipJnszKeuSND97JZl9DYTn3anoTQ-3M1QPrQigOmfb--PJba-k0NRlRoo_ByP4g\"}")},
 								mediaType = MediaType.APPLICATION_JSON_VALUE)),
 			@ApiResponse(responseCode = "401", description = "인증 실패 : ID/PW 오류로 JWT 발급 불가", content = @Content(examples = {
 			          @ExampleObject(name = "",
@@ -93,7 +93,7 @@ public class AuthenticationController {
 	public ResponseEntity<JwtDto> signIn(@RequestBody 
 										@io.swagger.v3.oas.annotations.parameters.RequestBody SignInDto signInDto) {
 		UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(signInDto.getId(), signInDto.getPassword());
+                new UsernamePasswordAuthenticationToken(signInDto.getUserId(), signInDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -104,7 +104,6 @@ public class AuthenticationController {
 		return ResponseEntity.status(HttpStatus.OK)
 								.body(new JwtDto(String.valueOf(HttpStatus.OK.value()), SecurityConstants.TOKEN_PREFIX, jwt, refreshToken));
 	}
-	
 	
 //	@Tag(name = "Authentication", description = "인증")
 //	@Operation(summary = "JWT 갱신 (Undeveloped)", description = "RefreshToken을 이용하여 JWT 재발급 (Undeveloped)")
