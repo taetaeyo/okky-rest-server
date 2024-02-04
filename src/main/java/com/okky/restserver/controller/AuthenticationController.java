@@ -4,7 +4,6 @@ import java.time.Duration;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -49,29 +48,28 @@ public class AuthenticationController {
 	@Operation(summary = "회원 로그인", description = "로그인을 시도하여 성공시 JWT 발급한다. JWT 만료 시간은 10분")
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "200", description = "로그인 성공 : JWT 발급 성공", content = @Content(examples = {
-	          @ExampleObject(name = "getJwt",
-                      summary = "JWT 발급 성공 예시",
-                      description = "JWT 만료 시간 10분",
-                      value = "{\"code\":\"200\",\"grantType\":\"Bearer \",\"jwt\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWV0YWUiLCJhdXRoIjoidXNlciIsImV4cCI6MTcwNzA1ODAxMH0.3Q1to0uaR6qk4Vpm_zPryY9ihjOt9VNlb7OeZp6CSFmJhc7n2Vam2AwEZpAHL4mx1vW9Y76DMHbC6t7tV1uvKw\",\"refreshToken\":\"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWV0YWUiLCJhdXRoIjoidXNlciIsImV4cCI6MTcwNzE0MzgxNX0.l-WuRttrOJOmsMAG36yXvm4ipJnszKeuSND97JZl9DYTn3anoTQ-3M1QPrQigOmfb--PJba-k0NRlRoo_ByP4g\"}")},
-								mediaType = MediaType.APPLICATION_JSON_VALUE)),
+					@ExampleObject(name = "getJwt", 
+							summary = "JWT 발급 성공 예시", 
+							description = "JWT 만료 시간 10분", 
+							value = "{\"statusCode\":200,\"code\":\"S0000\",\"message\":\"SUCCESS\",\"result\":{\"type\":\"object\",\"data\":{\"grantType\":\"Bearer \",\"jwt\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWV0YWUiLCJhdXRoIjoidXNlciIsImV4cCI6MTcwNzA2MTk1MH0.q8nmjC9Jxka8nANfv7RbO2q2jtYt03wgV3sN13H_CIZn2t38j7741DCnSr5WDXNablbY9vtfrD8eUso23BZuvA\",\"refreshToken\":\"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWV0YWUiLCJhdXRoIjoidXNlciIsImV4cCI6MTcwNzE0Nzc1NX0.zaQI9rOoTcVg9fpE6Mj0n8YsLZIkGJAMX5Wr8cMqYnyWSBfzU86ty4uCAo1t1FUvlokNJyy4hFhkVG-r7whIEg\"}}}") }, 
+							mediaType = MediaType.APPLICATION_JSON_VALUE)),
 			@ApiResponse(responseCode = "401", description = "인증 실패 : ID/PW 오류로 JWT 발급 불가", content = @Content(examples = {
 			          @ExampleObject(name = "",
-		                      summary = "JWT 인증 실패",
-		                      description = "사용자 인증 실패 ID/PW 오류",
-		                      value = "{\"code\":401,\"message\":\"FAIL AUTHENTICATION\"}")},
-										mediaType = MediaType.APPLICATION_JSON_VALUE)),
+							summary = "JWT 인증 실패", description = "사용자 인증 실패 ID/PW 오류", 
+							value = "{\"code\":401,\"message\":\"FAIL AUTHENTICATION\"}") }, 
+							mediaType = MediaType.APPLICATION_JSON_VALUE)),
 			@ApiResponse(responseCode = "402", description = "JWT 만료", content = @Content(examples = {
 			          @ExampleObject(name = "",
-		                      summary = "JWT 만료",
-		                      description = "만료된 JWT로 RefreshToken을 이용하여 JWT 갱신 필요",
-		                      value = "{\"code\":402,\"message\":\"TOKEN EXPIRED\"}")},
-										mediaType = MediaType.APPLICATION_JSON_VALUE)),
+							summary = "JWT 만료", 
+							description = "만료된 JWT로 RefreshToken을 이용하여 JWT 갱신 필요", 
+							value = "{\"code\":402,\"message\":\"TOKEN EXPIRED\"}") }, 
+							mediaType = MediaType.APPLICATION_JSON_VALUE)),
 			@ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(examples = {
 			          @ExampleObject(name = "",
-		                      summary = "권한 없음",
-		                      description = "권한 있는 사용자 인지 확인 필요",
-		                      value = "{\"code\":403,\"message\":\"FAIL AUTHORIZATION\"}")},
-										mediaType = MediaType.APPLICATION_JSON_VALUE))
+							summary = "권한 없음", 
+							description = "권한 있는 사용자 인지 확인 필요", 
+							value = "{\"code\":403,\"message\":\"FAIL AUTHORIZATION\"}") }, 
+							mediaType = MediaType.APPLICATION_JSON_VALUE))
 	})
 	@io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(
 				examples = {
@@ -90,19 +88,29 @@ public class AuthenticationController {
 				}
 	))
 	@PostMapping(value = "/sign-in")
-	public ResponseEntity<JwtDto> signIn(@RequestBody 
-										@io.swagger.v3.oas.annotations.parameters.RequestBody SignInDto signInDto) {
-		UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(signInDto.getUserId(), signInDto.getPassword());
+	public com.okky.restserver.dto.ApiResponse<JwtDto> signIn(
+			@RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody SignInDto signInDto) {
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+				signInDto.getUserId(), signInDto.getPassword());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		String jwt = jwtProvider.generateJwt(authentication, Duration.ofMinutes(10));
+		String refreshToken = jwtProvider.generateRefreshToken(authentication, Duration.ofHours(24));
+
+		com.okky.restserver.dto.ApiResponse<JwtDto> response = new com.okky.restserver.dto.ApiResponse<>();
+		response.setStatusCode(HttpStatus.OK.value());
+        response.setCode("S0000");
+        response.setMessage("SUCCESS");
         
-        String jwt = jwtProvider.generateJwt(authentication, Duration.ofMinutes(10));
-        String refreshToken = jwtProvider.generateRefreshToken(authentication, Duration.ofHours(24));
-        
-		return ResponseEntity.status(HttpStatus.OK)
-								.body(new JwtDto(String.valueOf(HttpStatus.OK.value()), SecurityConstants.TOKEN_PREFIX, jwt, refreshToken));
+        com.okky.restserver.dto.ApiResponse.Result<JwtDto> result = new com.okky.restserver.dto.ApiResponse.Result<>();
+        result.setType("object");
+        result.setData(new JwtDto(SecurityConstants.TOKEN_PREFIX, jwt, refreshToken));
+
+        response.setResult(result);
+		
+		return response;
 	}
 	
 //	@Tag(name = "Authentication", description = "인증")
