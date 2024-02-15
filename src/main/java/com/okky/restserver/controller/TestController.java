@@ -28,7 +28,8 @@ public class TestController {
 			@ApiResponse(responseCode = "404", description = "실패") })
 	@GetMapping("/test")
 	public String test() {
-		String data = "okky project return test";
+//		String data = "okky project return test";
+		String data = "jenkins test";
 		
 		log.info("Test Controller data {} ", data);
 		
