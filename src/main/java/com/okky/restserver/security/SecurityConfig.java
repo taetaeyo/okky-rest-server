@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * @author taekwon
  */
-@Slf4j
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
@@ -58,8 +57,8 @@ public class SecurityConfig {
 	    	.addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
 	        .addFilterBefore(new JwtAuthorizationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
 	        .exceptionHandling(exceptionHandling -> exceptionHandling
-	                .accessDeniedHandler(jwtAccessDeniedHandler)
-	                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+	                .accessDeniedHandler(jwtAccessDeniedHandler)			// 인가 실패
+	                .authenticationEntryPoint(jwtAuthenticationEntryPoint)	// 인증 실패
             )
 	    	// token을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 적용
 	    	.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests

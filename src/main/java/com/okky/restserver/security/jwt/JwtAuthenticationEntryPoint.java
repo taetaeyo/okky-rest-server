@@ -2,13 +2,14 @@ package com.okky.restserver.security.jwt;
 
 import java.io.IOException;
 
-import org.json.simple.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import com.okky.restserver.aop.AuthenticationErrorCode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.okky.restserver.dto.ErrorDto;
+import com.okky.restserver.dto.ResponseCode;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,45 +24,54 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		
+		
+	    
 		final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
 		// 예외 유형에 따라 적절한 응답을 생성
-        if(authorization == null) {
-        	log.error("AcessToken Error : FAIL_AUTHENTICATION");
-            setJsonResponse(response, AuthenticationErrorCode.FAIL_AUTHENTICATION);
+		if(request.getAttribute("exception") != null && request.getAttribute("exception") == ResponseCode.E0005) {
+        	log.error("AccessToken Error : x-api-key is null");
+        	
+        	//resolver.resolveException(request, response, null, (Exception) request.getAttribute("exception"));
+
+        } else if(authorization == null) {
+        	log.error("AccessToken Error : FAIL_AUTHENTICATION");
+            setJsonResponse(response, ResponseCode.E0001);
         }
-        //토큰 만료된 경우
-        else if(authorization.equals(AuthenticationErrorCode.TOKEN_EXPIRED)) {
-        	log.error("AcessToken Error : TOKEN_EXPIRED");
-            setJsonResponse(response, AuthenticationErrorCode.TOKEN_EXPIRED);
+        // 토큰 만료된 경우
+        else if(ResponseCode.E0002.name().equals(request.getAttribute("exception").toString())) {
+        	log.error("AccessToken Error : TOKEN_EXPIRED");
+            setJsonResponse(response, ResponseCode.E0002);
         }
-        // 미권한 토큰인 경우
-        else if(authorization.equals(AuthenticationErrorCode.FAIL_AUTHORIZATION)) {
-        	log.error("AcessToken Error : FAIL_AUTHORIZATION");
-            setJsonResponse(response, AuthenticationErrorCode.FAIL_AUTHORIZATION);
+        // 미권한 토큰인 경우 (현재 권한이 나뉘어져 있지 않음)
+        else if(authorization.equals(ResponseCode.E0003.name())) {
+        	log.error("AccessToken Error : FAIL_AUTHORIZATION");
+            setJsonResponse(response, ResponseCode.E0003);
         }
         // 400 error
-        else if(authorization.equals(AuthenticationErrorCode.INVALID_INPUT_VALUE)) {
-        	log.error("AcessToken Error : INVALID_INPUT_VALUE");
-            setJsonResponse(response, AuthenticationErrorCode.INVALID_INPUT_VALUE);
-        }
-        else {
-        	log.error("AcessToken Error : INTERNAL_SERVER_ERROR");
-            setJsonResponse(response, AuthenticationErrorCode.INTERNAL_SERVER_ERROR);
+        else if(authorization.equals(ResponseCode.E0000.name())) {
+        	log.error("AccessToken Error : INVALID_INPUT_VALUE");
+            setJsonResponse(response, ResponseCode.E0000);
+        } else {
+        	log.error("AccessToken Error : INTERNAL_SERVER_ERROR");
+            setJsonResponse(response, ResponseCode.E0004);
         }
 	}
 	
 	//한글 출력을 위해 getWriter() 사용
-    private void setJsonResponse(HttpServletResponse response, AuthenticationErrorCode code) throws IOException {
+    private void setJsonResponse(HttpServletResponse response, ResponseCode code) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-        JSONObject responsObject = new JSONObject();
         
-        responsObject.put("message", code.getMessage());
-        responsObject.put("code", code.getHttpStatus().value());
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonObj = mapper.writeValueAsString(ErrorDto.builder()
+        		.status(code.getStatus().value())
+        		.code(code.name())
+        		.message(code.getMessage()).build());
 
-        response.getWriter().print(responsObject);
+        log.debug(jsonObj);
+
+        response.getWriter().print(jsonObj);
     }
 
 }

@@ -34,13 +34,13 @@ public class UserController {
 	
 	@Tag(name = "USER", description = "회원")
 	@Operation(summary = "회원 가입", description = "회원 가입 진행")
-	@ApiResponses(value = { 
+	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "회원 가입 성공", content = @Content(examples = {
-	          @ExampleObject(name = "insertUser",
-                      summary = "회원 가입 성공 예시",
-                      description = "회원 가입 성공 예시",
-                      value = "{\"uuid\":\"74ba9f95-4460-47e1-a7bb-ec6f8b4a84de\",\"userId\":\"test01\",\"email\":\"aaa@naver.com\",\"userName\":\"taetae\",\"nickName\":\"testNickName\"}")},
-								mediaType = MediaType.APPLICATION_JSON_VALUE)),
+		        @ExampleObject(name = "insertUser",
+		        		summary = "회원 가입 성공 예시",
+		        		description = "회원 가입 성공 예시",
+		        		value = "{\"status\": 200,\"code\": \"S0000\",\"message\": \"Success\",\"result\": {\"uuid\":\"74ba9f95-4460-47e1-a7bb-ec6f8b4a84de\",\"userId\":\"test01\",\"email\":\"aaa@naver.com\",\"userName\":\"taetae\",\"nickName\":\"testNickName\"}")},
+						mediaType = MediaType.APPLICATION_JSON_VALUE))
 	})
 	@PostMapping("/sign-up")
 	public ResponseEntity<UserResponseDto> signUp(@RequestBody 

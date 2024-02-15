@@ -4,31 +4,41 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.okky.restserver.dto.ErrorDto;
+import com.okky.restserver.dto.ResponseCode;
 import com.okky.restserver.security.exception.DuplicateUserException;
 import com.okky.restserver.security.exception.NotFoundMemberException;
 
-@ControllerAdvice
+/**
+ * 
+ * @author hyunj
+ *
+ */
+
+@RestControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(CONFLICT)
-    @ExceptionHandler(value = { DuplicateUserException.class })
-    @ResponseBody
-    protected ErrorDto conflict(RuntimeException ex, WebRequest request) {
-        return new ErrorDto(CONFLICT.value(), ex.getMessage());
+    @ExceptionHandler(DuplicateUserException.class)
+    protected ErrorDto conflict() {
+        return ErrorDto.builder()
+        		.status(ResponseCode.E0006.getStatus().value())
+        		.code(ResponseCode.E0006.name())
+        		.message(ResponseCode.E0006.getMessage()).build();
     }
 
     @ResponseStatus(FORBIDDEN)
-    @ExceptionHandler(value = { NotFoundMemberException.class, AccessDeniedException.class })
-    @ResponseBody
-    protected ErrorDto forbidden(RuntimeException ex, WebRequest request) {
-        return new ErrorDto(FORBIDDEN.value(), ex.getMessage());
+    @ExceptionHandler({NotFoundMemberException.class, AccessDeniedException.class })
+    protected ErrorDto forbidden() {
+        return ErrorDto.builder()
+        		.status(ResponseCode.E0000.getStatus().value())
+        		.code(ResponseCode.E0000.name())
+        		.message(ResponseCode.E0000.getMessage()).build();
     }
+    
 }

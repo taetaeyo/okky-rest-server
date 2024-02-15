@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.okky.restserver.dto.ResponseCode;
 import com.okky.restserver.security.SecurityConstants;
 import com.okky.restserver.security.jwt.JwtProvider;
 
@@ -39,7 +40,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 		log.info("AuthorizationHeader Check {}", authorizationHeader);
 
 		String token = getAccessToken(authorizationHeader);
-		log.info("Access Token {}", token);
 		
 		// 토큰 유효 check
 		if (StringUtils.hasText(token) && jwtProvider.validationToken(token)) {
@@ -48,6 +48,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
             SecurityContextHolder.getContext().setAuthentication(authentication);
 		} else {	// 토큰 유효하지 않음
 			log.error("Token validation Fail");
+			request.setAttribute("exception", ResponseCode.E0002.name());
 		}
 		
 		filterChain.doFilter(request, response);

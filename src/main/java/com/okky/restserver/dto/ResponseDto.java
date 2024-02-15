@@ -4,11 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @Builder
-public class ErrorDto {
+public class ResponseDto<T> {
 	private final int status;
 	private final String code;
 	private final String message;
+	private final T result;
 }
