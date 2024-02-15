@@ -29,7 +29,7 @@ public class TestController {
 	@GetMapping("/test")
 	public String test() {
 //		String data = "okky project return test";
-		String data = "jenkins test";
+		String data = "jenkins test2";
 		
 		log.info("Test Controller data {} ", data);
 		
