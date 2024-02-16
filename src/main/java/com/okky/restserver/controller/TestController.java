@@ -34,7 +34,7 @@ public class TestController {
 				.status(ResponseCode.S0000.getStatus().value())
 				.code(ResponseCode.S0000.name())
 				.message(ResponseCode.S0000.getMessage())
-				.result("jenkins test11").build();
+				.result("jenkins test123123").build();
 		
 		log.info("Test Controller data {} ", data);
 		
