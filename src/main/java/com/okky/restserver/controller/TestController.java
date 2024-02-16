@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.okky.restserver.domain.User;
+import com.okky.restserver.dto.ResponseCode;
+import com.okky.restserver.dto.ResponseDto;
 import com.okky.restserver.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,9 +29,12 @@ public class TestController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "성공"),
 			@ApiResponse(responseCode = "404", description = "실패") })
 	@GetMapping("/test")
-	public String test() {
-//		String data = "okky project return test";
-		String data = "jenkins test2";
+	public ResponseDto<Object> test() {
+		ResponseDto<Object> data = ResponseDto.builder()
+				.status(ResponseCode.S0000.getStatus().value())
+				.code(ResponseCode.S0000.name())
+				.message(ResponseCode.S0000.getMessage())
+				.result("jenkins test2").build();
 		
 		log.info("Test Controller data {} ", data);
 		

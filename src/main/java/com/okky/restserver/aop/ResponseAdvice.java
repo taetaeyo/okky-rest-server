@@ -27,7 +27,7 @@ public class ResponseAdvice implements ResponseBodyAdvice{
 			Class selectedConverterType,
 			ServerHttpRequest request, ServerHttpResponse response) {
 		
-		if(body instanceof ErrorDto) {
+		if(body instanceof ErrorDto || body instanceof ResponseDto) {
 			return body;
 		} else {
 			return ResponseDto.builder()

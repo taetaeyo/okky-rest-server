@@ -43,16 +43,16 @@ public class UserController {
 						mediaType = MediaType.APPLICATION_JSON_VALUE))
 	})
 	@PostMapping("/sign-up")
-	public ResponseEntity<UserResponseDto> signUp(@RequestBody 
+	public UserResponseDto signUp(@RequestBody 
 				@io.swagger.v3.oas.annotations.parameters.RequestBody UserRequestDto request) {
-		return ResponseEntity.ok(userService.signUp(request));
+		return userService.signUp(request);
 	}
 	
 	@Tag(name = "USER", description = "회원")
 	@Operation(summary = "회원 정보 조회", description = "UUID를 이용하여 회원 정보 조회")
 	@GetMapping("/user/{uuid}")
-	public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable("uuid") final UUID uuid) {
-		return ResponseEntity.ok(userService.findByUuid(uuid));
+	public UserResponseDto getUserInfo(@PathVariable("uuid") final UUID uuid) {
+		return userService.findByUuid(uuid);
 	}
 	
 }
