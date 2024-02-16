@@ -34,17 +34,16 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 
-@Slf4j
 @RequestMapping(value = "/auth")
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "Authentication", description = "인증")
 public class AuthenticationController {
 	
 	private final JwtProvider jwtProvider;
 //	private final AuthenticationService authenticationService;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	
-	@Tag(name = "Authentication", description = "인증")
 	@Operation(summary = "회원 로그인", description = "로그인을 시도하여 성공시 JWT 발급한다. JWT 만료 시간은 10분")
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "200", description = "로그인 성공 : JWT 발급 성공", content = @Content(examples = {
@@ -98,17 +97,6 @@ public class AuthenticationController {
 
 		String jwt = jwtProvider.generateJwt(authentication, Duration.ofMinutes(10));
 		String refreshToken = jwtProvider.generateRefreshToken(authentication, Duration.ofHours(24));
-
-//		com.okky.restserver.dto.ApiResponse<JwtDto> response = new com.okky.restserver.dto.ApiResponse<>();
-//		response.setStatusCode(HttpStatus.OK.value());
-//        response.setCode("S0000");
-//        response.setMessage("SUCCESS");
-        
-//        com.okky.restserver.dto.ApiResponse.Result<JwtDto> result = new com.okky.restserver.dto.ApiResponse.Result<>();
-//        result.setType("object");
-//        result.setData(new JwtDto(SecurityConstants.TOKEN_PREFIX, jwt, refreshToken));
-
-//        response.setResult(result);
 	
 		HashMap<String,Object> result = new HashMap<String,Object>();
 		result.put("type", "object");

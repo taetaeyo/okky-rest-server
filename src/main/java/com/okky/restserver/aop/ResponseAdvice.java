@@ -26,8 +26,7 @@ public class ResponseAdvice implements ResponseBodyAdvice{
 			MediaType selectedContentType,
 			Class selectedConverterType,
 			ServerHttpRequest request, ServerHttpResponse response) {
-		
-		if(body instanceof ErrorDto || body instanceof ResponseDto) {
+		if(body instanceof ErrorDto || body instanceof ResponseDto || request.getURI().toString().contains("/v3/api-docs")) {
 			return body;
 		} else {
 			return ResponseDto.builder()
