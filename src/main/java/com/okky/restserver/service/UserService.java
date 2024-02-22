@@ -25,20 +25,17 @@ public class UserService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	// 사용자 전체 list 조회
-	@Transactional(readOnly = true)
 	public List<User> getUsersList(){
     	return userRepository.findAll();
     }
 
 	// 사용자 ID로 정보 조회
-	@Transactional(readOnly = true)
 	public User findById(String userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException(userId + " 사용자가 존재하지 않습니다."));
     }
 	
 	// UUID로 회원 정보 조회
-	@Transactional(readOnly = true)
 	public UserResponseDto findByUuid(UUID uuid) {
 		log.info("uuid : {}", uuid);
 		

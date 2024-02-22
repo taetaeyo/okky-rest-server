@@ -3,14 +3,12 @@ package com.okky.restserver.security.filter;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okky.restserver.aop.AuthenticationErrorCode;
 import com.okky.restserver.dto.ErrorDto;
 import com.okky.restserver.dto.ResponseCode;
 import com.okky.restserver.security.SecurityConstants;
@@ -41,7 +39,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 		String xApiKey = request.getHeader(SecurityConstants.API_KEY_AUTH_HEADER_NAME);		
 		
 		// x-api-key 확인 예외 url
-		String[] urls = new String[] {"/swagger/", "/swagger-ui/", "/swagger-resources/", "/v3/api-docs"};
+		String[] urls = new String[] { "/swagger/", "/swagger-ui/", "/swagger-resources/", "/v3/api-docs", "/images/" };
 		
 		if(Arrays.stream(urls).anyMatch(url -> request.getServletPath().contains(url))) {
 			log.info("Exclude swagger-related URLs from the ApiKeyFilter");

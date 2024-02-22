@@ -1,9 +1,11 @@
 package com.okky.restserver.security;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,7 +20,6 @@ import com.okky.restserver.security.jwt.JwtProvider;
 import com.okky.restserver.security.jwt.JwtSecurityConfig;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Spring Security 환경 설정을 구성하기 위한 클래스
@@ -37,6 +38,15 @@ public class SecurityConfig {
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final ApiKeyFilter apiKeyFilter;
 
+	/**
+	 * static 자원 인증 ignore
+	 * @return
+	 */
+	@Bean
+	WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+	}
+	
     /**
      * HTTP에 대해서 ‘인증’과 ‘인가’를 담당하는 메서드
      * 필터를 통해 인증 방식과 인증 절차에 대해서 등록하며 설정을 담당하는 메서드
