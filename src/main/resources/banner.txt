@@ -1,0 +1,21 @@
+${AnsiColor.BRIGHT_RED}❤${AnsiColor.BRIGHT_CYAN}　　　　　,-､　　　 　 　 　　　..-､
+${AnsiColor.BRIGHT_CYAN}　　　　 ./${AnsiColor.BRIGHT_YELLOW}:::::${AnsiColor.BRIGHT_CYAN}＼　　　　 　 　 ／${AnsiColor.BRIGHT_YELLOW}:::${AnsiColor.BRIGHT_CYAN}ヽ
+${AnsiColor.BRIGHT_CYAN}　　　　/${AnsiColor.BRIGHT_YELLOW}::::::::::${AnsiColor.BRIGHT_CYAN}ゝ--──----- ､/${AnsiColor.BRIGHT_YELLOW}:::::${AnsiColor.BRIGHT_CYAN}ヽ
+${AnsiColor.BRIGHT_CYAN}　　　 /${AnsiColor.BRIGHT_YELLOW},.-‐''"′ 　　　　　　　　 ${AnsiColor.BRIGHT_CYAN}＼${AnsiColor.BRIGHT_YELLOW}::::${AnsiColor.BRIGHT_CYAN}|
+${AnsiColor.BRIGHT_CYAN}　　／　 　　　　　　　　　　　　    ヽ､:|
+${AnsiColor.BRIGHT_CYAN}　/　　　　${AnsiColor.WHITE}●${AnsiColor.BRIGHT_CYAN}　　　 　 　 　 　 　 　 ヽ |
+${AnsiColor.BRIGHT_CYAN} l　　　${AnsiColor.BRIGHT_RED}､､､　　 　 　 　 　 　 ${AnsiColor.WHITE}●${AnsiColor.BRIGHT_CYAN}　　   l
+${AnsiColor.BRIGHT_CYAN} |　　　 　　　　(_人__丿　　${AnsiColor.BRIGHT_RED}､､､　 　  ${AnsiColor.BRIGHT_CYAN}|
+${AnsiColor.BRIGHT_CYAN} l　　　　　　　　　　　　　　　　 　  l
+${AnsiColor.BRIGHT_CYAN}　` ､　　　　　　　　 　 　 　　 　 　/
+${AnsiColor.BRIGHT_CYAN}　　　`ｰ ､__　　　 　 　 　　　___.／
+${AnsiColor.BRIGHT_CYAN}　　　　　　/`'''ｰ‐‐──‐‐‐┬--- ／
+${AnsiColor.BRIGHT_MAGENTA} ____      ____      __                                      
+${AnsiColor.BRIGHT_YELLOW}|_  _|    |_  _|    [  |                                   
+${AnsiColor.BRIGHT_GREEN}  \ \  /\  / /.---.  | |  .---.  .--.  _ .--..--.  .---.  
+${AnsiColor.BRIGHT_RED}   \ \/  \/ // /__\\ | | / /'`\] .'`\ [ `.-. .-. |/ /__\\  
+${AnsiColor.BRIGHT_BLUE}    \  /\  / | \__., | | | \__.| \__. || | | | | || \__.,  
+${AnsiColor.BRIGHT_GREEN}     \/  \/   '.__.'[___]'.___.''.__.'[___||__||__]'.__.' 
+
+${application.title} ${application.version}
+${AnsiColor.BRIGHT_YELLOW}Powered by Deotis (Based Spring Boot ${spring-boot.version})
