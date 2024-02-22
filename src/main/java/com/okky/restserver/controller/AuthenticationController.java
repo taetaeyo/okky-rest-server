@@ -44,7 +44,10 @@ public class AuthenticationController {
 //	private final AuthenticationService authenticationService;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	
-	@Operation(summary = "회원 로그인", description = "로그인을 시도하여 성공시 JWT 발급한다. JWT 만료 시간은 10분")
+	@Operation(summary = "회원 로그인", description = "1) 로그인을 시도하여 성공시 JWT 발급한다.\n "
+													+ "2) JWT 만료 시간 : 10분\n"
+													+ "3) Header : x-api-key 값 필요\n"
+													+ "4) JWT 만료시 refreshToken을 이용하여 JWT 재발급 필요")
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "200", description = "로그인 성공 : JWT 발급 성공", content = @Content(examples = {
 					@ExampleObject(name = "getJwt", 

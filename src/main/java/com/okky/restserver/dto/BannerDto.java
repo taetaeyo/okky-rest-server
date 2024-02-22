@@ -1,5 +1,6 @@
 package com.okky.restserver.dto;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.okky.restserver.domain.Banner;
@@ -31,10 +32,10 @@ public class BannerDto {
 	
 	@Schema(description = "생성일시", nullable = false)
 	@NotNull
-	private Date dateCreated;
+	private String dateCreated;
 	
 	@Builder
-	public BannerDto(String name, String type, String url, Date dateCreated) {
+	public BannerDto(String name, String type, String url, String dateCreated) {
 		this.name = name;
 		this.type = type;
 		this.url = url;
@@ -42,11 +43,13 @@ public class BannerDto {
 	}
 	
 	public static BannerDto convertToDto(Banner banner) {
+		SimpleDateFormat dateFormaet = new SimpleDateFormat("yyyy-MM-dd HH:ss:mm");
+		
 		return BannerDto.builder()
 					.name(banner.getName())
 					.type(banner.getType())
 					.url(banner.getUrl())
-					.dateCreated(banner.getDateCreated())
+					.dateCreated(dateFormaet.format(banner.getDateCreated()))
 					.build();
 	}
 	
