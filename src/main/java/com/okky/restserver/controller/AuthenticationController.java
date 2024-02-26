@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.okky.restserver.dto.CreateAccessTokenRequest;
+import com.okky.restserver.dto.CreateAccessTokenResponse;
 import com.okky.restserver.dto.JwtDto;
 import com.okky.restserver.dto.SignInDto;
 import com.okky.restserver.security.SecurityConstants;
 import com.okky.restserver.security.jwt.JwtProvider;
 //import com.okky.restserver.service.AuthenticationService;
+import com.okky.restserver.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +29,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Authentication
@@ -41,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationController {
 	
 	private final JwtProvider jwtProvider;
-//	private final AuthenticationService authenticationService;
+	private final AuthenticationService authenticationService;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	
 	@Operation(summary = "회원 로그인", description = "1) 로그인을 시도하여 성공시 JWT 발급한다.\n "
@@ -108,13 +110,15 @@ public class AuthenticationController {
 		return result;
 	}
 	
-//	@Tag(name = "Authentication", description = "인증")
-//	@Operation(summary = "JWT 갱신 (Undeveloped)", description = "RefreshToken을 이용하여 JWT 재발급 (Undeveloped)")
-//	@PostMapping("/refresh-token")
-//    public ResponseEntity<CreateAccessTokenResponse> createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
-//        String newAccessToken = authenticationService.createNewAccessToken(request.getRefreshToken());
-//
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                				.body(new CreateAccessTokenResponse(newAccessToken));
-//    }
+	@Operation(summary = "JWT 갱신 (Undeveloped)", description = "RefreshToken을 이용하여 JWT 재발급")
+	@PostMapping("/refresh-token")
+    public Object createNewAccessToken(@RequestBody CreateAccessTokenRequest req) {
+        String newAccessToken = authenticationService.createNewAccessToken(req.getRefreshToken());
+
+        HashMap<String,Object> result = new HashMap<String,Object>();
+		result.put("type", "object");
+		result.put("data", new CreateAccessTokenResponse(newAccessToken));
+	
+		return result;
+    }
 }

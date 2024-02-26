@@ -20,14 +20,14 @@ public class RefreshToken {
 	@Column(name = "id", updatable = false, unique = true)
 	private Long id;
 	
-	@Column(name = "user_id", nullable = false, unique = true)
-	private Long userId;
+	@Column(name = "user_seq", nullable = false, unique = true)
+	private Long userSeq;
 	
 	@Column(name = "refresh_token", nullable = false)
 	private String refreshToken;
 	
-	public RefreshToken(Long userId, String refreshToken) {
-	    this.userId = userId;
+	public RefreshToken(Long userSeq, String refreshToken) {
+	    this.userSeq = userSeq;
 	    this.refreshToken = refreshToken;
 	}
 	

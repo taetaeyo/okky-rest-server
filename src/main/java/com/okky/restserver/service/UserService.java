@@ -28,11 +28,11 @@ public class UserService {
 	public List<User> getUsersList(){
     	return userRepository.findAll();
     }
-
-	// 사용자 ID로 정보 조회
-	public User findById(String userId) {
-        return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException(userId + " 사용자가 존재하지 않습니다."));
+		
+	// 사용자 Seq로 정보 조회
+	public User findById(Long userSeq) {
+        return userRepository.findById(userSeq)
+                .orElseThrow(() -> new IllegalArgumentException(userSeq + " 사용자가 존재하지 않습니다."));
     }
 	
 	// UUID로 회원 정보 조회
@@ -48,7 +48,7 @@ public class UserService {
 	public UserResponseDto signUp(UserRequestDto userRequestDto) {
 		
 		if (userRepository.findByUserId(userRequestDto.getUserId()).orElse(null) != null) {
-			log.info("		::		Duplicate ID	::");
+			log.info("		::  		Duplicate ID		::");
 			throw new DuplicateUserException("이미 가입되어 있는 유저입니다.");
 		}
 		

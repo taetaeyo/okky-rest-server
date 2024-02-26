@@ -39,7 +39,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             setJsonResponse(response, ResponseCode.E0001);
         }
         // 토큰 만료된 경우
-        else if(ResponseCode.E0002.name().equals(request.getAttribute("exception").toString())) {
+        else if(request.getAttribute("exception") != null && ResponseCode.E0002.name().equals(request.getAttribute("exception").toString())) {
         	log.error("AccessToken Error : TOKEN_EXPIRED");
             setJsonResponse(response, ResponseCode.E0002);
         }

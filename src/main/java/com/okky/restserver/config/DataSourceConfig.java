@@ -20,14 +20,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import jakarta.persistence.EntityManagerFactory;
-import lombok.extern.slf4j.Slf4j; 
+import jakarta.persistence.EntityManagerFactory; 
 /**
  * @author taekwon
  * @description dynamic data source configuration (Hikari connection pool)
  */
 
-@Slf4j
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(

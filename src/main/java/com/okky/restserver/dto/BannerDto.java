@@ -1,7 +1,6 @@
 package com.okky.restserver.dto;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import com.okky.restserver.domain.Banner;
 

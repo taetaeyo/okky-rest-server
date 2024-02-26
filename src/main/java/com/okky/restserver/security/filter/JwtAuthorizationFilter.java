@@ -41,14 +41,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
 		String token = getAccessToken(authorizationHeader);
 		
-		// 토큰 유효 check
-		if (StringUtils.hasText(token) && jwtProvider.validationToken(token)) {
-			// 인증 정보 설정
-			Authentication authentication = jwtProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-		} else {	// 토큰 유효하지 않음
-			log.error("Token validation Fail");
-			request.setAttribute("exception", ResponseCode.E0002.name());
+		if(!request.getServletPath().contains("refresh-token")) {
+			// 토큰 유효 check
+			if (StringUtils.hasText(token) && jwtProvider.validationToken(token)) {
+				// 인증 정보 설정
+				Authentication authentication = jwtProvider.getAuthentication(token);
+	            SecurityContextHolder.getContext().setAuthentication(authentication);
+			} else {	// 토큰 유효하지 않음
+				log.error("Token validation Fail");
+				request.setAttribute("exception", ResponseCode.E0002.name());
+			}
 		}
 		
 		filterChain.doFilter(request, response);
