@@ -49,7 +49,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 			} else {
 				log.info("Header x-api-key Check {}", xApiKey);
 
-				setJsonResponse(response, ResponseCode.E0000);
+				setJsonResponse(response, ResponseCode.E0005);
 				
 				return;
 			}
