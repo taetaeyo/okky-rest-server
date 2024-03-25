@@ -110,7 +110,42 @@ public class AuthenticationController {
 		return result;
 	}
 	
-	@Operation(summary = "JWT 갱신 (Undeveloped)", description = "RefreshToken을 이용하여 JWT 재발급")
+	@Operation(summary = "JWT 갱신", description = "RefreshToken을 이용하여 JWT 재발급")
+	@ApiResponses(value = { 
+			@ApiResponse(responseCode = "200", description = "refreshToken 재발급 성공", content = @Content(examples = {
+					@ExampleObject(name = "", 
+							summary = "JWT 재발급 성공 예시", 
+							description = "", 
+							value = "{\"status\":200,\"code\":\"S0000\",\"message\":\"Success\",\"result\":{\"data\":{\"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbm9ueW1vdXNVc2VyIiwiYXV0aCI6IlJPTEVfQU5PTllNT1VTIiwiZXhwIjoxNzExMzU0NzA4fQ.kcm_vKKsN_ACmK1HY_ZMOqVVkq_lorSWOoVEWlbfiA3LpAmYlF8bB0OMj2oM4DzzGS-iuMK_98nhtS6rdZFUZg\"},\"type\":\"object\"}}") }, 
+							mediaType = MediaType.APPLICATION_JSON_VALUE)),
+			@ApiResponse(responseCode = "400", description = "x-api-key가 올바르지 않음", content = @Content(examples = {
+			          @ExampleObject(name = "",
+							summary = "x-api-key 확인 필요", 
+							description = "x-api-key 올바른지 확인 필요", 
+							value = "{\"status\":400,\"code\":\"E0005\",\"message\":\"The input value is invalied.\"}") }, 
+							mediaType = MediaType.APPLICATION_JSON_VALUE)),
+			@ApiResponse(responseCode = "500", description = "refreshToken 유효하지 않음", content = @Content(examples = {
+			          @ExampleObject(name = "",
+							summary = "refreshToken이 유효하지 않음", 
+							description = "유효한 refreshToken인지 확인 필요", 
+							value = "{\"status\":500,\"code\":\"E0004\",\"message\":\"Internal server error.\"}") }, 
+							mediaType = MediaType.APPLICATION_JSON_VALUE))
+			
+	})
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(
+				examples = {
+						@ExampleObject(name = "Success", value = """ 
+		                    { 
+		                        "refreshToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWV0YWUiLCJhdXRoIjoidXNlciIsImV4cCI6MTcxMTQ0MDE1MX0.NhrZyf9eLfVB0tp8abktz-R3YEnynTv7Ot_Dw6a0AvXyxvUSUMSuMQbryg-QUtHxItlcIh1jwCBWLYKvr8SHTg"
+		                    }
+								""", description = "유효한 refreshToken"),
+						@ExampleObject(name = "Fail", value = """ 
+	                     { 
+		                        "refreshToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWV0YWUiLCJhdXRoIjoidXNlciIsImV4cCI6MTcxMTQ0MDE1MX0.NhrZyf9eLfVB0tp8abktz-R3YEnynTv7Ot_Dw6a0AvXyxvUSUMSuMQbryg-QUtHxItlcIh1jwCBWLYKvr8S234"
+		                 }
+								""", description = "유효하지 않은 refreshToken")
+				}
+	))
 	@PostMapping("/refresh-token")
     public Object createNewAccessToken(@RequestBody CreateAccessTokenRequest req) {
         String newAccessToken = authenticationService.createNewAccessToken(req.getRefreshToken());
