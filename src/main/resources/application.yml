@@ -3,7 +3,7 @@ spring:
     hikari:
       primary:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://34.145.27.221:3306/okky?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+        jdbc-url: jdbc:mysql://34.168.63.241:3306/okky?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
         username: okky
         password: 1234
   jpa:
